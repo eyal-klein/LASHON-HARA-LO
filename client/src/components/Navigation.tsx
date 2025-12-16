@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 interface NavItem {
   label: string;
@@ -20,6 +21,7 @@ const navItems: NavItem[] = [
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location] = useLocation();
+  const { user } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border shadow-sm">
@@ -42,6 +44,17 @@ export function Navigation() {
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
+            {user && (
+              <Link href="/admin">
+                <a className={`font-medium transition-colors ${
+                  location.startsWith('/admin') 
+                    ? 'text-primary' 
+                    : 'text-foreground/80 hover:text-primary'
+                }`}>
+                  ניהול
+                </a>
+              </Link>
+            )}
             {navItems.map((item) => {
               const isActive = location === item.href;
               
@@ -92,6 +105,20 @@ export function Navigation() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <nav className="md:hidden py-4 border-t border-border">
+            {user && (
+              <Link href="/admin">
+                <a 
+                  className={`block py-3 font-medium ${
+                    location.startsWith('/admin') 
+                      ? 'text-primary' 
+                      : 'text-foreground/80 hover:text-primary'
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  ניהול
+                </a>
+              </Link>
+            )}
             {navItems.map((item) => {
               const isActive = location === item.href;
               
