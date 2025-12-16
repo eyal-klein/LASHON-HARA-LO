@@ -154,3 +154,12 @@ The website is complete with:
 - Activity/event listings
 
 **The 5% remaining is purely content and optional real API keys. All functionality is built and working!**
+
+---
+
+## 🐛 CRITICAL BUGS (Found in Manual Testing - Dec 16)
+
+- [ ] Fix navigation links - replace <a> with <Link> from wouter (ALL PAGES)
+- [ ] Add shared Navigation component to all internal pages
+- [ ] Fix "אני מצטרף להתחייבות" button - add smooth scroll to form
+- [ ] Test all navigation flows in production after fixes

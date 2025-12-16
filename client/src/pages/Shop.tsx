@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { Navigation } from "@/components/Navigation";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { Navigation } from "@/components/Navigation";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,23 +11,7 @@ import { ArrowRight, Camera, Users, Calendar, Megaphone, Image } from "lucide-re
 // Header component (same as other pages)
 function Header() {
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container py-4">
-        <nav className="flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-gray-900">
-            לשון הרע <span className="text-primary">לא מדבר</span> אליי
-          </Link>
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="/about" className="text-gray-600 hover:text-primary transition-colors">אודות</Link>
-            <Link href="/activities" className="text-gray-600 hover:text-primary transition-colors">הפעילות שלנו</Link>
-            <Link href="/gallery" className="text-primary font-medium">גלריה</Link>
-            <Link href="/join" className="text-gray-600 hover:text-primary transition-colors">הצטרפו אלינו</Link>
-            <Link href="/donate" className="text-gray-600 hover:text-primary transition-colors">תרומה</Link>
-            <Link href="/contact" className="text-gray-600 hover:text-primary transition-colors">צרו קשר</Link>
-          </div>
-        </nav>
-      </div>
-    </header>
+    <Navigation />
   );
 }
 

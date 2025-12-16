@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { Navigation } from "@/components/Navigation";
 import { AIChatBox, Message } from "@/components/AIChatBox";
 import { trpc } from "@/lib/trpc";
 import { BookOpen, ArrowRight, Sparkles } from "lucide-react";

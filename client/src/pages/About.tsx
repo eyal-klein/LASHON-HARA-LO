@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
+import { Navigation } from "@/components/Navigation";
 import { 
   Heart, Target, Users, Award, 
   ArrowLeft, CheckCircle2, Quote
@@ -10,22 +11,7 @@ export default function About() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b">
-        <div className="container py-4">
-          <nav className="flex items-center justify-between">
-            <Link href="/">
-              <span className="text-xl font-bold">
-                לשון הרע <span className="text-primary">לא מדבר</span> אליי
-              </span>
-            </Link>
-            <div className="flex items-center gap-4">
-              <Link href="/">
-                <Button variant="ghost">חזרה לדף הבית</Button>
-              </Link>
-            </div>
-          </nav>
-        </div>
-      </header>
+      <Navigation />
 
       {/* Hero */}
       <section className="section-padding bg-gradient-to-b from-secondary to-background">

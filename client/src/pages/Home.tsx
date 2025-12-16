@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { Input } from "@/components/ui/input";
@@ -32,11 +33,11 @@ function Header() {
   
   const navItems = [
     { label: "אודות", href: "/about" },
-    { label: "הפעילות שלנו", href: "#activities" },
+    { label: "הפעילות שלנו", href: "/activities" },
     { label: "הצטרפו אלינו", href: "/join" },
     { label: "תרומה", href: "/donate" },
     { label: "צרו קשר", href: "/contact" },
-    { label: "חנות", href: "https://shop.lashonhara.co.il", external: true },
+    { label: "חנות", href: "/shop" },
   ];
 
   return (
@@ -44,22 +45,20 @@ function Header() {
       <div className="container">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2">
-            <Logo className="h-12 md:h-14 w-auto" />
-          </a>
+          <Link href="/">
+            <a className="flex items-center gap-2">
+              <Logo className="h-12 md:h-14 w-auto" />
+            </a>
+          </Link>
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             {navItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                target={item.external ? "_blank" : undefined}
-                rel={item.external ? "noopener noreferrer" : undefined}
-                className="text-foreground/80 hover:text-primary font-medium transition-colors"
-              >
-                {item.label}
-              </a>
+              <Link key={item.label} href={item.href}>
+                <a className="text-foreground/80 hover:text-primary font-medium transition-colors">
+                  {item.label}
+                </a>
+              </Link>
             ))}
           </nav>
           
@@ -81,16 +80,14 @@ function Header() {
         {mobileMenuOpen && (
           <nav className="md:hidden py-4 border-t border-border">
             {navItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                target={item.external ? "_blank" : undefined}
-                rel={item.external ? "noopener noreferrer" : undefined}
-                className="block py-3 text-foreground/80 hover:text-primary font-medium"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.label}
-              </a>
+              <Link key={item.label} href={item.href}>
+                <a
+                  className="block py-3 text-foreground/80 hover:text-primary font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              </Link>
             ))}
           </nav>
         )}

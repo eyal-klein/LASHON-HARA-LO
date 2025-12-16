@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRoute, Link } from "wouter";
+import { Navigation } from "@/components/Navigation";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
