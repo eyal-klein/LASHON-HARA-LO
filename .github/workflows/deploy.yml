@@ -1,0 +1,227 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: lason-hara-lo
+  REGION: me-west1
+  SERVICE_NAME: lashonhara-web
+  ARTIFACT_REGISTRY: me-west1-docker.pkg.dev
+
+jobs:
+  # ===========================================
+  # Job 1: Build and Test
+  # ===========================================
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint --if-present
+
+      - name: Run type check
+        run: npm run check --if-present
+
+      - name: Run tests
+        run: npm test --if-present
+        env:
+          CI: true
+
+      - name: Build application
+        run: npm run build
+
+  # ===========================================
+  # Job 2: Deploy to Staging (develop branch)
+  # ===========================================
+  deploy-staging:
+    name: Deploy to Staging
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    
+    environment:
+      name: staging
+      url: https://staging-lashonhara-${{ env.PROJECT_ID }}.run.app
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ env.ARTIFACT_REGISTRY }} --quiet
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --tag "${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:${{ github.sha }}" \
+            --tag "${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:staging-latest" \
+            --build-arg NODE_ENV=staging \
+            .
+
+      - name: Push Docker image
+        run: |
+          docker push "${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:${{ github.sha }}"
+          docker push "${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:staging-latest"
+
+      - name: Deploy to Cloud Run (Staging)
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE_NAME }}-staging
+          region: ${{ env.REGION }}
+          image: ${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:${{ github.sha }}
+          flags: |
+            --allow-unauthenticated
+            --cpu=1
+            --memory=512Mi
+            --min-instances=0
+            --max-instances=5
+            --port=3000
+          env_vars: |
+            NODE_ENV=staging
+
+      - name: Output Staging URL
+        run: |
+          echo "🚀 Staging deployment complete!"
+          echo "URL: https://${{ env.SERVICE_NAME }}-staging-${{ env.PROJECT_ID }}.run.app"
+
+  # ===========================================
+  # Job 3: Deploy to Production (main branch)
+  # ===========================================
+  deploy-production:
+    name: Deploy to Production
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    environment:
+      name: production
+      url: https://lashonhara-${{ env.PROJECT_ID }}.run.app
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ env.ARTIFACT_REGISTRY }} --quiet
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --tag "${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:${{ github.sha }}" \
+            --tag "${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:latest" \
+            --build-arg NODE_ENV=production \
+            .
+
+      - name: Push Docker image
+        run: |
+          docker push "${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:${{ github.sha }}"
+          docker push "${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:latest"
+
+      - name: Deploy to Cloud Run (Production)
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ env.REGION }}
+          image: ${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:${{ github.sha }}
+          flags: |
+            --allow-unauthenticated
+            --cpu=2
+            --memory=1Gi
+            --min-instances=1
+            --max-instances=10
+            --port=3000
+            --cpu-boost
+          env_vars: |
+            NODE_ENV=production
+
+      - name: Output Production URL
+        run: |
+          echo "🎉 Production deployment complete!"
+          echo "URL: https://${{ env.SERVICE_NAME }}-${{ env.PROJECT_ID }}.run.app"
+
+  # ===========================================
+  # Job 4: Database Migration (on main only)
+  # ===========================================
+  migrate-database:
+    name: Run Database Migrations
+    needs: deploy-production
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run migrations
+        run: npm run db:push
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Migration complete
+        run: echo "✅ Database migrations completed successfully"

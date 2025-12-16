@@ -1,0 +1,108 @@
+name: Scheduled Checks
+
+on:
+  schedule:
+    # Run every day at 6:00 AM UTC (8:00 AM Israel time)
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+env:
+  PRODUCTION_URL: https://lashonhara-web-lason-hara-lo.run.app
+
+jobs:
+  # ===========================================
+  # Health Check
+  # ===========================================
+  health-check:
+    name: Production Health Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check production health
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" ${{ env.PRODUCTION_URL }}/api/health || echo "000")
+          if [ "$response" = "200" ]; then
+            echo "✅ Production is healthy (HTTP $response)"
+          else
+            echo "❌ Production health check failed (HTTP $response)"
+            exit 1
+          fi
+
+      - name: Check homepage loads
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" ${{ env.PRODUCTION_URL }} || echo "000")
+          if [ "$response" = "200" ]; then
+            echo "✅ Homepage loads successfully (HTTP $response)"
+          else
+            echo "❌ Homepage failed to load (HTTP $response)"
+            exit 1
+          fi
+
+  # ===========================================
+  # Dependency Updates Check
+  # ===========================================
+  dependency-check:
+    name: Check for Dependency Updates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check for outdated packages
+        run: |
+          npm outdated || true
+
+      - name: Run security audit
+        run: |
+          npm audit --audit-level=high || true
+
+  # ===========================================
+  # Performance Check
+  # ===========================================
+  performance-check:
+    name: Lighthouse Performance Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            ${{ env.PRODUCTION_URL }}
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+  # ===========================================
+  # SSL Certificate Check
+  # ===========================================
+  ssl-check:
+    name: SSL Certificate Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check SSL certificate expiry
+        run: |
+          domain="lashonhara-web-lason-hara-lo.run.app"
+          expiry=$(echo | openssl s_client -servername $domain -connect $domain:443 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+          expiry_epoch=$(date -d "$expiry" +%s)
+          now_epoch=$(date +%s)
+          days_left=$(( ($expiry_epoch - $now_epoch) / 86400 ))
+          
+          echo "SSL Certificate expires: $expiry"
+          echo "Days until expiry: $days_left"
+          
+          if [ $days_left -lt 30 ]; then
+            echo "⚠️ Warning: SSL certificate expires in less than 30 days!"
+            exit 1
+          else
+            echo "✅ SSL certificate is valid for $days_left more days"
+          fi

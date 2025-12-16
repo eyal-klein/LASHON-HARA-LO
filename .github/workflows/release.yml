@@ -1,0 +1,87 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+env:
+  PROJECT_ID: lason-hara-lo
+  REGION: me-west1
+  SERVICE_NAME: lashonhara-web
+  ARTIFACT_REGISTRY: me-west1-docker.pkg.dev
+
+jobs:
+  # ===========================================
+  # Create Release Build
+  # ===========================================
+  release-build:
+    name: Release Build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get release version
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ env.ARTIFACT_REGISTRY }} --quiet
+
+      - name: Build and tag release image
+        run: |
+          docker build \
+            --tag "${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:${{ steps.version.outputs.VERSION }}" \
+            --tag "${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:latest" \
+            --build-arg NODE_ENV=production \
+            --label "version=${{ steps.version.outputs.VERSION }}" \
+            --label "release_date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+            .
+
+      - name: Push release image
+        run: |
+          docker push "${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:${{ steps.version.outputs.VERSION }}"
+          docker push "${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:latest"
+
+      - name: Deploy release to production
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ env.REGION }}
+          image: ${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:${{ steps.version.outputs.VERSION }}
+          flags: |
+            --allow-unauthenticated
+            --cpu=2
+            --memory=1Gi
+            --min-instances=1
+            --max-instances=10
+            --port=3000
+            --cpu-boost
+            --tag=release-${{ steps.version.outputs.VERSION }}
+          env_vars: |
+            NODE_ENV=production
+            APP_VERSION=${{ steps.version.outputs.VERSION }}
+
+      - name: Create deployment summary
+        run: |
+          echo "## 🎉 Release ${{ steps.version.outputs.VERSION }} Deployed!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Production URL:** https://${{ env.SERVICE_NAME }}-${{ env.PROJECT_ID }}.run.app" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Image:** \`${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/lashonhara/${{ env.SERVICE_NAME }}:${{ steps.version.outputs.VERSION }}\`" >> $GITHUB_STEP_SUMMARY
