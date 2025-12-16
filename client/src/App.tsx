@@ -16,6 +16,7 @@ import Admin from "./pages/Admin";
 import ChofetzChaim from "./pages/ChofetzChaim";
 import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
+import DebugShop from "./pages/DebugShop";
 import AdminDonations from "./pages/AdminDonations";
 import AdminOrders from "./pages/AdminOrders";
 import AdminProducts from "./pages/AdminProducts";
@@ -36,6 +37,7 @@ function Router() {
       <Route path={"/admin"} component={Admin} />
       <Route path={"/chofetz-chaim"} component={ChofetzChaim} />
       <Route path={"/shop"} component={Shop} />
+      <Route path={"/debug-shop"} component={DebugShop} />
       <Route path={"/shop/:id"} component={ProductDetail} />
       <Route path={"/admin/donations"} component={AdminDonations} />
       <Route path={"/admin/orders"} component={AdminOrders} />

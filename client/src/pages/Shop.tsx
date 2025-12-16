@@ -23,6 +23,8 @@ export default function Shop() {
 
   return (
     <div className="min-h-screen bg-gray-50" dir="rtl">
+      <Navigation />
+      
       {/* Header */}
       <div className="bg-[#ED1C24] text-white py-16">
         <div className="container mx-auto text-center">
@@ -67,12 +69,12 @@ export default function Shop() {
             onChange={(e) => setSearch(e.target.value)}
             className="max-w-xs"
           />
-          <Select value={category} onValueChange={setCategory}>
+          <Select value={category || "undefined"} onValueChange={(val) => setCategory(val === "undefined" ? undefined : val)}>
             <SelectTrigger className="max-w-xs">
               <SelectValue placeholder="כל הקטגוריות" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">כל הקטגוריות</SelectItem>
+              <SelectItem value="undefined">כל הקטגוריות</SelectItem>
               <SelectItem value="books">ספרים</SelectItem>
               <SelectItem value="bracelets">צמידים</SelectItem>
               <SelectItem value="stickers">מדבקות</SelectItem>
@@ -92,7 +94,7 @@ export default function Shop() {
                 <Card key={product.id} className="hover:shadow-lg transition">
                   <CardContent className="pt-6">
                     <img
-                      src={JSON.parse(product.images as string)[0]}
+                      src={product.images[0] || '/images/placeholder.png'}
                       alt={product.name}
                       className="w-full h-40 object-cover rounded mb-4"
                     />

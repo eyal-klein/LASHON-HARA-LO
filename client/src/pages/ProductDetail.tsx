@@ -31,6 +31,8 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-gray-50" dir="rtl">
+      <Navigation />
+      
       <div className="container mx-auto py-8 px-4">
         <Link href="/shop">
           <Button variant="outline" className="mb-6">← חזרה לחנות</Button>
