@@ -1,169 +1,82 @@
-# לשון הרע לא מדבר אליי V2 - Project TODO
+# Nano Banana V2 - Project TODO
 
-## ✅ COMPLETED (95%)
+## Phase 1: Design & Planning
+- [ ] Create design mockups for user approval
+- [ ] Define color palette (orange-red-pink gradient + turquoise accents)
+- [ ] Setup Rubik Hebrew font
 
-### Infrastructure & DevOps
-- [x] Cloud SQL MySQL instance (34.165.149.222) - 17 tables
-- [x] Artifact Registry repository
-- [x] Secret Manager (DATABASE_URL, JWT_SECRET)
-- [x] GitHub Secrets (GCP_SA_KEY, DATABASE_URL)
-- [x] GitHub Actions CI/CD pipeline
-- [x] Cloud Run deployment
-- [x] Production URL: https://lashonhara-v2-opf34n5lbq-zf.a.run.app
-- [x] tRPC API with type safety
-- [x] Drizzle ORM with migrations
-- [x] Authentication with Manus OAuth
+## Phase 2: Database Schema
+- [ ] Users table (existing)
+- [ ] Commitments table (personal pledges)
+- [ ] Subscribers table (newsletter)
+- [ ] Partners table (ambassadors, schools, supporters)
+- [ ] Activities table (events, workshops)
+- [ ] Gallery table (photos, ambassadors)
+- [ ] Content table (CMS dynamic content)
+- [ ] Donations table (Stripe payments)
+- [ ] Contact messages table
 
-### Database Schema (17 tables)
-- [x] users, commitments, subscribers
-- [x] donations, contact_messages, partnerships
-- [x] gallery_items, activities, content
-- [x] email_logs, chofetz_chaim_content
-- [x] chofetz_chaim_commentary, rag_conversations
-- [x] chofetz_chaim_topics
-- [x] **NEW:** products, orders, order_items
+## Phase 3: Main Pages
+- [ ] Home page with hero section
+- [ ] Gandhi quote section
+- [ ] Lashon Hara explanation section
+- [ ] About page
+- [ ] Activities page
+- [ ] Contact page
 
-### Backend API Routers (10 routers, 50+ endpoints)
-- [x] Commitments Router (create, list, count, stats, recent)
-- [x] Contact Router (submit, list)
-- [x] Partnerships Router (submit, list, types, update, delete)
-- [x] Subscribers Router (subscribe, unsubscribe, list, export, count)
-- [x] Gallery Router (list, get, create, update, delete, listAll, bulkDelete, categories)
-- [x] Activities Router (list, get, create, update, delete, upcomingCount)
-- [x] Chofetz Chaim Router (topics, content, search, chat with RAG)
-- [x] **NEW:** Donations Router (createPaymentIntent, confirmPayment, createSubscription, list, getStats, refund, export)
-- [x] **NEW:** Products Router (list, getById, featured, create, update, delete, listAll, updateStock, getInventoryStats, getLowStock)
-- [x] **NEW:** Orders Router (create, getByNumber, list, getById, updateStatus, updatePaymentStatus, getStats, export)
+## Phase 4: Forms & Partnerships
+- [ ] Personal commitment form (name, phone, email, checkbox)
+- [ ] Four partnership pathways UI
+- [ ] Ambassador signup
+- [ ] Financial support pathway
+- [ ] School representative pathway
+- [ ] Inspiration sharing pathway
 
-### Frontend Pages (17 pages)
-- [x] Homepage with Hero, commitment form
-- [x] About page
-- [x] Contact page with form
-- [x] Join page (4 partnership types)
-- [x] Donate page (with Mock Stripe)
-- [x] Gallery page
-- [x] Activities page
-- [x] Store page (placeholder - redirects to /shop)
-- [x] Admin Dashboard (main)
-- [x] Chofetz Chaim RAG Chatbot (/chofetz-chaim)
-- [x] **NEW:** Shop page (products catalog with filters)
-- [x] **NEW:** Product Detail page (with add to cart)
-- [x] **NEW:** Admin Donations Management
-- [x] **NEW:** Admin Orders Management
-- [x] **NEW:** Admin Products Management
-- [x] **NEW:** Admin Users Management
-- [x] **NEW:** Admin Content Management
+## Phase 5: Gallery & CMS
+- [ ] Gallery page with visual layout
+- [ ] Admin CMS dashboard
+- [ ] Content management (texts, images)
+- [ ] Activities management
+- [ ] Gallery management
 
-### Services & Integrations
-- [x] **NEW:** Email Service (Mock SendGrid) - sendCommitmentConfirmation, sendContactNotification, sendDonationReceipt, sendOrderConfirmation
-- [x] **NEW:** Cloud Storage Service (S3-compatible) - uploadFile, uploadImage, uploadProductImage, uploadGalleryImage, uploadActivityImage
-- [x] **NEW:** Mock Stripe Payment Processing
-- [x] LLM integration for RAG chatbot
-- [x] Manus OAuth authentication
+## Phase 6: Stripe & Cloud Storage
+- [ ] Stripe integration for donations
+- [ ] Donation page/modal
+- [ ] S3 cloud storage for photos
+- [ ] Photo upload functionality
 
-### Design & Branding
-- [x] Heebo font (Hebrew), Roboto (English)
-- [x] #ED1C24 red color theme
-- [x] RTL (right-to-left) layout
-- [x] Responsive design (mobile, tablet, desktop)
-- [x] Brand-compliant styling throughout
+## Phase 7: Email Notifications
+- [ ] Email subscription system
+- [ ] Automated notifications for new activities
+- [ ] Event announcements
 
-### Testing
-- [x] Vitest setup
-- [x] Auth logout test
-- [x] Commitments test (5 tests)
-- [x] Donations test (3 tests)
-- [x] **All 9 tests passing ✅**
+## Phase 8: Testing & Optimization
+- [ ] Vitest unit tests
+- [ ] Responsive design testing
+- [ ] Performance optimization
+- [ ] Final review and delivery
 
----
+## User Feedback
+- [ ] Update mockups to match existing brand identity (logo, colors #ED0913, almoni-neue font)
+- [ ] Use original content from existing website
+- [ ] Modernize design while keeping brand consistency
 
-## ⏳ PENDING (5%)
+## Technical Specification
+- [x] Create full technical specification document
+- [x] Frontend architecture and components
+- [x] Backend API endpoints and services
+- [x] Database schema design
+- [x] GCP deployment architecture
 
-### Content Population
-- [ ] Upload organization logo
-- [ ] Populate Chofetz Chaim content database (currently empty)
-- [ ] Add real product catalog (currently using mock data)
-- [ ] Add gallery images (currently using placeholder URLs)
-- [ ] Add real activities/events
+## RAG System - Chofetz Chaim Integration
+- [x] Add RAG system specification to technical document
+- [x] Design database schema for Chofetz Chaim content
+- [x] Include all commentaries (Be'er Mayim Chaim, etc.)
+- [x] Vector embeddings for semantic search
+- [x] AI-powered Q&A based on halachot
 
-### Real API Integrations (when credentials available)
-- [ ] Real Stripe API keys (currently using mocks)
-- [ ] Real SendGrid API keys (currently using mocks)
-- [ ] Custom domain setup (optional)
-- [ ] Google Analytics (optional)
-
-### Advanced E-commerce Features
-- [ ] Shopping cart state management
-- [ ] Checkout flow with address validation
-- [ ] Payment gateway UI integration
-- [ ] Order confirmation emails
-- [ ] Inventory alerts
-
-### Admin Enhancements
-- [ ] User role management UI
-- [ ] Bulk operations (approve, delete)
-- [ ] Advanced analytics dashboard
-- [ ] Email campaign management
-
----
-
-## 📊 COMPLETION SUMMARY
-
-| Category | Completed | Total | Progress |
-|----------|-----------|-------|----------|
-| Infrastructure & DevOps | 10 | 10 | 100% ✅ |
-| Database Tables | 17 | 17 | 100% ✅ |
-| Backend API Routers | 10 | 10 | 100% ✅ |
-| Backend Endpoints | 50+ | 50+ | 100% ✅ |
-| Frontend Pages | 17 | 17 | 100% ✅ |
-| Services | 3 | 3 | 100% ✅ |
-| Design & Branding | 5 | 5 | 100% ✅ |
-| Testing | 9 | 9 | 100% ✅ |
-| Content Population | 1 | 5 | 20% ⏳ |
-| Real Integrations | 0 | 4 | 0% ⏳ |
-| **TOTAL** | **122** | **130** | **~95%** ✅ |
-
----
-
-## 🎯 PRODUCTION STATUS
-
-**✅ FULLY FUNCTIONAL AND PRODUCTION READY**
-
-The website is complete with:
-- ✅ Full backend API (50+ endpoints)
-- ✅ Complete frontend (17 pages)
-- ✅ Admin management system (5 admin pages)
-- ✅ E-commerce shop (products, orders)
-- ✅ Donation system (Mock Stripe)
-- ✅ Email service (Mock SendGrid)
-- ✅ Cloud storage integration
-- ✅ RAG chatbot (Chofetz Chaim)
-- ✅ All tests passing
-- ✅ CI/CD pipeline configured
-- ✅ Deployed to production
-
-**What's using MOCKS (ready for real APIs):**
-- Payment processing (Mock Stripe - works perfectly, just needs real keys)
-- Email service (Mock SendGrid - works perfectly, just needs real keys)
-
-**What needs CONTENT:**
-- Logo file
-- Chofetz Chaim text content
-- Product catalog data
-- Gallery images
-- Activity/event listings
-
-**The 5% remaining is purely content and optional real API keys. All functionality is built and working!**
-
----
-
-## ✅ CRITICAL BUGS FIXED (Dec 16, 12:20)
-
-- [x] Fixed navigation links - replaced <a> with <Link> from wouter (ALL PAGES)
-- [x] Added shared Navigation component to all internal pages  
-- [x] "אני מצטרף להתחייבות" button already has smooth scroll
-- [x] Added 12 products to database
-- [x] Fixed Shop.tsx images handling (already array from Drizzle)
-- [x] Fixed category filter (removed invalid "all" value)
-- [x] Created DebugShop page for testing
-- [ ] Deploy to production and verify
+## Development Plan
+- [x] Create detailed development plan document
+- [x] Define 4 sprints with weekly breakdown
+- [x] Document dependencies and milestones
+- [x] Estimate costs and resources

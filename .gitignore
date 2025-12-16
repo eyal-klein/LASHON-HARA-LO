@@ -105,9 +105,3 @@ temp/
 *.db
 *.sqlite
 *.sqlite3
-
-# GCP Secrets - NEVER commit these
-gcp-sa-key.json
-gcp-service-account.json
-*-service-account*.json
-*credentials*.json
