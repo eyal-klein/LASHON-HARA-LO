@@ -14,6 +14,13 @@ import Activities from "./pages/Activities";
 import Store from "./pages/Store";
 import Admin from "./pages/Admin";
 import ChofetzChaim from "./pages/ChofetzChaim";
+import Shop from "./pages/Shop";
+import ProductDetail from "./pages/ProductDetail";
+import AdminDonations from "./pages/AdminDonations";
+import AdminOrders from "./pages/AdminOrders";
+import AdminProducts from "./pages/AdminProducts";
+import AdminUsers from "./pages/AdminUsers";
+import AdminContent from "./pages/AdminContent";
 
 function Router() {
   return (
@@ -28,6 +35,13 @@ function Router() {
       <Route path={"/store"} component={Store} />
       <Route path={"/admin"} component={Admin} />
       <Route path={"/chofetz-chaim"} component={ChofetzChaim} />
+      <Route path={"/shop"} component={Shop} />
+      <Route path={"/shop/:id"} component={ProductDetail} />
+      <Route path={"/admin/donations"} component={AdminDonations} />
+      <Route path={"/admin/orders"} component={AdminOrders} />
+      <Route path={"/admin/products"} component={AdminProducts} />
+      <Route path={"/admin/users"} component={AdminUsers} />
+      <Route path={"/admin/content"} component={AdminContent} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

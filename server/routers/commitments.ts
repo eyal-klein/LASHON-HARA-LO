@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { publicProcedure, router } from "../_core/trpc";
+import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 import { commitments } from "../../drizzle/schema";
-import { count, desc } from "drizzle-orm";
+import { count, desc, eq, sql } from "drizzle-orm";
 
 // Validation schema for creating a commitment
 const createCommitmentSchema = z.object({
@@ -94,5 +94,82 @@ export const commitmentsRouter = router({
         .limit(limit);
 
       return result;
+    }),
+
+  // List all commitments with pagination (Admin only)
+  list: protectedProcedure
+    .input(
+      z.object({
+        page: z.number().min(1).default(1),
+        limit: z.number().min(1).max(100).default(20),
+      })
+    )
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        return { items: [], total: 0, page: 1, limit: 20 };
+      }
+
+      const { page, limit } = input;
+      const offset = (page - 1) * limit;
+
+      const [items, totalResult] = await Promise.all([
+        db
+          .select()
+          .from(commitments)
+          .orderBy(desc(commitments.createdAt))
+          .limit(limit)
+          .offset(offset),
+        db.select({ count: count() }).from(commitments),
+      ]);
+
+      return {
+        items,
+        total: totalResult[0]?.count || 0,
+        page,
+        limit,
+      };
+    }),
+
+  // Export commitments to CSV (Admin only)
+  export: protectedProcedure
+    .input(z.object({ format: z.enum(["csv", "xlsx"]) }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        return "";
+      }
+
+      const items = await db
+        .select()
+        .from(commitments)
+        .orderBy(desc(commitments.createdAt));
+
+      // Convert to CSV
+      const headers = ["ID", "תאריך", "שם", "טלפון", "אימייל", "קבלת עדכונים"];
+      const rows = items.map((item) => [
+        item.id,
+        item.createdAt?.toISOString().split("T")[0] || "",
+        item.name,
+        item.phone,
+        item.email || "",
+        item.receiveUpdates ? "כן" : "לא",
+      ]);
+
+      const csv = [headers.join(","), ...rows.map((row) => row.join(","))].join("\n");
+      return csv;
+    }),
+
+  // Delete commitment (Admin only)
+  delete: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new Error("Database not available");
+      }
+
+      await db.delete(commitments).where(eq(commitments.id, input.id));
+      return { success: true };
     }),
 });

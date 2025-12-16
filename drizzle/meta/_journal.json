@@ -15,6 +15,13 @@
       "when": 1765893447763,
       "tag": "0001_uneven_sasquatch",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1765902645443,
+      "tag": "0002_bent_roulette",
+      "breakpoints": true
     }
   ]
 }

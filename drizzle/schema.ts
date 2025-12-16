@@ -330,3 +330,82 @@ export const chofetzChaimTopics = mysqlTable("chofetz_chaim_topics", {
 
 export type ChofetzChaimTopic = typeof chofetzChaimTopics.$inferSelect;
 export type InsertChofetzChaimTopic = typeof chofetzChaimTopics.$inferInsert;
+
+// ========== PRODUCTS (SHOP) ==========
+export const products = mysqlTable("products", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 200 }).notNull(),
+  description: text("description").notNull(),
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  compareAtPrice: decimal("compareAtPrice", { precision: 10, scale: 2 }),
+  sku: varchar("sku", { length: 100 }),
+  barcode: varchar("barcode", { length: 100 }),
+  category: mysqlEnum("category", ["books", "bracelets", "stickers", "posters", "other"]).notNull(),
+  images: json("images").notNull(), // Array of image URLs
+  stockQuantity: int("stockQuantity").default(0).notNull(),
+  lowStockThreshold: int("lowStockThreshold").default(5).notNull(),
+  weight: decimal("weight", { precision: 10, scale: 2 }), // in kg
+  dimensions: varchar("dimensions", { length: 100 }), // e.g., "10x20x5 cm"
+  isPublished: boolean("isPublished").default(true).notNull(),
+  isFeatured: boolean("isFeatured").default(false).notNull(),
+  tags: text("tags"), // comma-separated
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  categoryIdx: index("idx_products_category").on(table.category),
+  skuIdx: index("idx_products_sku").on(table.sku),
+}));
+
+export type Product = typeof products.$inferSelect;
+export type InsertProduct = typeof products.$inferInsert;
+
+// ========== ORDERS ==========
+export const orders = mysqlTable("orders", {
+  id: int("id").autoincrement().primaryKey(),
+  orderNumber: varchar("orderNumber", { length: 50 }).notNull().unique(),
+  customerName: varchar("customerName", { length: 200 }).notNull(),
+  customerEmail: varchar("customerEmail", { length: 320 }).notNull(),
+  customerPhone: varchar("customerPhone", { length: 20 }).notNull(),
+  shippingAddress: text("shippingAddress").notNull(),
+  shippingCity: varchar("shippingCity", { length: 100 }).notNull(),
+  shippingZip: varchar("shippingZip", { length: 20 }).notNull(),
+  billingAddress: text("billingAddress"),
+  subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
+  shippingCost: decimal("shippingCost", { precision: 10, scale: 2 }).default("0").notNull(),
+  tax: decimal("tax", { precision: 10, scale: 2 }).default("0").notNull(),
+  total: decimal("total", { precision: 10, scale: 2 }).notNull(),
+  status: mysqlEnum("status", ["pending", "processing", "shipped", "delivered", "cancelled"]).default("pending").notNull(),
+  paymentStatus: mysqlEnum("paymentStatus", ["pending", "paid", "failed", "refunded"]).default("pending").notNull(),
+  paymentMethod: varchar("paymentMethod", { length: 50 }),
+  trackingNumber: varchar("trackingNumber", { length: 100 }),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  shippedAt: timestamp("shippedAt"),
+  deliveredAt: timestamp("deliveredAt"),
+}, (table) => ({
+  orderNumberIdx: uniqueIndex("idx_orders_number").on(table.orderNumber),
+  emailIdx: index("idx_orders_email").on(table.customerEmail),
+  statusIdx: index("idx_orders_status").on(table.status),
+  createdAtIdx: index("idx_orders_created").on(table.createdAt),
+}));
+
+export type Order = typeof orders.$inferSelect;
+export type InsertOrder = typeof orders.$inferInsert;
+
+// ========== ORDER ITEMS ==========
+export const orderItems = mysqlTable("order_items", {
+  id: int("id").autoincrement().primaryKey(),
+  orderId: int("orderId").notNull(),
+  productId: int("productId").notNull(),
+  quantity: int("quantity").notNull(),
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  orderIdx: index("idx_order_items_order").on(table.orderId),
+  productIdx: index("idx_order_items_product").on(table.productId),
+}));
+
+export type OrderItem = typeof orderItems.$inferSelect;
+export type InsertOrderItem = typeof orderItems.$inferInsert;

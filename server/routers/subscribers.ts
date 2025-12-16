@@ -85,29 +85,61 @@ export const subscribersRouter = router({
   // List all subscribers (admin only)
   list: protectedProcedure
     .input(z.object({
-      limit: z.number().min(1).max(100).default(50),
-      offset: z.number().min(0).default(0),
+      page: z.number().min(1).default(1),
+      limit: z.number().min(1).max(100).default(20),
       activeOnly: z.boolean().default(true),
     }))
     .query(async ({ input }) => {
       const db = await getDb();
       if (!db) {
-        return [];
+        return { items: [], total: 0, page: 1, limit: 20 };
       }
       
-      if (input.activeOnly) {
-        return await db.select()
+      const { page, limit, activeOnly } = input;
+      const offset = (page - 1) * limit;
+      
+      const whereClause = activeOnly ? eq(subscribers.isActive, true) : undefined;
+      
+      const [items, totalResult] = await Promise.all([
+        db.select()
           .from(subscribers)
-          .where(eq(subscribers.isActive, true))
+          .where(whereClause)
           .orderBy(desc(subscribers.createdAt))
-          .limit(input.limit)
-          .offset(input.offset);
-      }
+          .limit(limit)
+          .offset(offset),
+        db.select({ count: count() })
+          .from(subscribers)
+          .where(whereClause),
+      ]);
       
-      return await db.select()
-        .from(subscribers)
-        .orderBy(desc(subscribers.createdAt))
-        .limit(input.limit)
-        .offset(input.offset);
+      return {
+        items,
+        total: totalResult[0]?.count || 0,
+        page,
+        limit,
+      };
+    }),
+
+  // Export subscribers (Admin)
+  export: protectedProcedure
+    .input(z.object({ format: z.enum(["csv", "xlsx"]) }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return "";
+      
+      const items = await db.select().from(subscribers).orderBy(desc(subscribers.createdAt));
+      
+      const headers = ["ID", "תאריך", "אימייל", "שם פרטי", "שם משפחה", "סטטוס", "מקור"];
+      const rows = items.map(item => [
+        item.id,
+        item.createdAt?.toISOString().split("T")[0] || "",
+        item.email,
+        item.firstName || "",
+        item.lastName || "",
+        item.isActive ? "פעיל" : "לא פעיל",
+        item.source || "",
+      ]);
+      
+      return [headers.join(","), ...rows.map(row => row.join(","))].join("\n");
     }),
 });

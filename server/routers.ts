@@ -9,6 +9,9 @@ import { subscribersRouter } from "./routers/subscribers";
 import { galleryRouter } from "./routers/gallery";
 import { activitiesRouter } from "./routers/activities";
 import { chofetzChaimRouter } from "./routers/chofetzChaim";
+import { donationsRouter } from "./routers/donations";
+import { productsRouter } from "./routers/products";
+import { ordersRouter } from "./routers/orders";
 
 export const appRouter = router({
   // System router (notifications, etc.)
@@ -34,6 +37,9 @@ export const appRouter = router({
   gallery: galleryRouter,
   activities: activitiesRouter,
   chofetzChaim: chofetzChaimRouter,
+  donations: donationsRouter,
+  products: productsRouter,
+  orders: ordersRouter,
 });
 
 export type AppRouter = typeof appRouter;
