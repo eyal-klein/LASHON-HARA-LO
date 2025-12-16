@@ -9,6 +9,11 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Join from "./pages/Join";
 import Donate from "./pages/Donate";
+import Gallery from "./pages/Gallery";
+import Activities from "./pages/Activities";
+import Store from "./pages/Store";
+import Admin from "./pages/Admin";
+import ChofetzChaim from "./pages/ChofetzChaim";
 
 function Router() {
   return (
@@ -18,6 +23,11 @@ function Router() {
       <Route path={"/contact"} component={Contact} />
       <Route path={"/join"} component={Join} />
       <Route path={"/donate"} component={Donate} />
+      <Route path={"/gallery"} component={Gallery} />
+      <Route path={"/activities"} component={Activities} />
+      <Route path={"/store"} component={Store} />
+      <Route path={"/admin"} component={Admin} />
+      <Route path={"/chofetz-chaim"} component={ChofetzChaim} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
