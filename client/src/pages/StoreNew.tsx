@@ -85,7 +85,7 @@ export default function StoreNew() {
                 <SelectValue placeholder="כל הקטגוריות" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">כל הקטגוריות</SelectItem>
+                <SelectItem value="all">כל הקטגוריות</SelectItem>
                 {categories?.map((cat) => (
                   <SelectItem key={cat.id} value={cat.slug}>
                     {cat.name}

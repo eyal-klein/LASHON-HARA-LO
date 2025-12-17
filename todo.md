@@ -377,9 +377,9 @@ The website is complete with:
 - [ ] Add environment variables reference
 
 
-## 🚨 NEW PRODUCTION ISSUES (Dec 17, 12:10)
+## ✅ NEW PRODUCTION ISSUES FIXED (Dec 17, 12:30)
 
-- [ ] **Logo not loading** - /lh-logo.png missing from client/public
-- [ ] **/shop route crashes** - SyntaxError: Unexpected token in JSON
-- [ ] **Product images not loading** - Need to check image URLs
-- [ ] **Categories incorrect** - Need to fix category names/values
+- [x] **Logo loading** - Fixed all paths to /images/lh-logo.png
+- [x] **/shop route** - Now uses StoreNew component (no crash)
+- [x] **Product images** - Code already handles JSON parsing correctly
+- [x] **Categories** - Fixed to use slug instead of id
