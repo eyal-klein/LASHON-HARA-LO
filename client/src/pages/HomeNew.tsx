@@ -130,7 +130,7 @@ function HeroSection() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link href="/commitment">
+            <Link href="/join">
               <Button
                 size="lg"
                 className="bg-white text-purple-600 hover:bg-white/90 text-xl px-8 py-6 h-auto"
@@ -504,8 +504,7 @@ function CTASection() {
                 <p className="text-muted-foreground mb-4">
                   תמכו בפעילות שלנו
                 </p>
-                <Link href="/donate">
-                  <Button className="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600">
+                <Link href="/join">               <Button className="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600">
                     תרמו עכשיו
                   </Button>
                 </Link>
@@ -602,7 +601,7 @@ function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/commitment">
+                <Link href="/join">
                   <a className="text-gray-400 hover:text-white transition-colors">
                     התחייבות
                   </a>
