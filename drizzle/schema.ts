@@ -255,23 +255,19 @@ export type InsertEmailLog = typeof emailLogs.$inferInsert;
 
 // ========== RAG SYSTEM TABLES ==========
 
-// Chofetz Chaim Content - הלכות לשון הרע
+// Chofetz Chaim Content - הלכות לשון הרע (RAG chunks)
 export const chofetzChaimContent = mysqlTable("chofetz_chaim_content", {
   id: int("id").autoincrement().primaryKey(),
-  book: mysqlEnum("book", ["hilchot_lashon_hara", "hilchot_rechilut", "shmirat_halashon"])
-    .notNull(),
-  chapter: int("chapter").notNull(),
-  section: int("section"),
-  paragraph: int("paragraph"),
-  hebrewText: text("hebrewText").notNull(),
-  transliteration: text("transliteration"),
-  englishTranslation: text("englishTranslation"),
-  summary: text("summary"),
-  topics: json("topics"), // string[]
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  section: mysqlEnum("section", ["lashon_hara", "rechilut"]).notNull(),
+  klal: varchar("klal", { length: 10 }).notNull(), // Hebrew letter (א, ב, ג...)
+  seif: varchar("seif", { length: 10 }).notNull(), // Hebrew letter (א, ב, ג...)
+  chunkIndex: int("chunk_index").notNull().default(0),
+  content: text("content").notNull(), // Clean Hebrew text chunk
+  embedding: json("embedding"), // Vector embedding for semantic search
+  sourceUrl: text("source_url"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => ({
-  bookChapterIdx: index("idx_cc_book_chapter").on(table.book, table.chapter),
+  sectionKlalIdx: index("idx_cc_section_klal").on(table.section, table.klal),
 }));
 
 export type ChofetzChaimContent = typeof chofetzChaimContent.$inferSelect;
@@ -331,6 +327,27 @@ export const chofetzChaimTopics = mysqlTable("chofetz_chaim_topics", {
 export type ChofetzChaimTopic = typeof chofetzChaimTopics.$inferSelect;
 export type InsertChofetzChaimTopic = typeof chofetzChaimTopics.$inferInsert;
 
+// ========== PRODUCT CATEGORIES ==========
+export const productCategories = mysqlTable("product_categories", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 200 }).notNull(),
+  slug: varchar("slug", { length: 200 }).notNull().unique(),
+  description: text("description"),
+  imageUrl: text("imageUrl"),
+  parentId: int("parentId"), // For nested categories
+  sortOrder: int("sortOrder").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  productCount: int("productCount").default(0).notNull(), // Cached count
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  slugIdx: uniqueIndex("idx_product_categories_slug").on(table.slug),
+  activeIdx: index("idx_product_categories_active").on(table.isActive),
+}));
+
+export type ProductCategory = typeof productCategories.$inferSelect;
+export type InsertProductCategory = typeof productCategories.$inferInsert;
+
 // ========== PRODUCTS (SHOP) ==========
 export const products = mysqlTable("products", {
   id: int("id").autoincrement().primaryKey(),
@@ -340,7 +357,7 @@ export const products = mysqlTable("products", {
   compareAtPrice: decimal("compareAtPrice", { precision: 10, scale: 2 }),
   sku: varchar("sku", { length: 100 }),
   barcode: varchar("barcode", { length: 100 }),
-  category: mysqlEnum("category", ["books", "bracelets", "stickers", "posters", "other"]).notNull(),
+  categoryId: int("categoryId").references(() => productCategories.id),
   images: json("images").notNull(), // Array of image URLs
   stockQuantity: int("stockQuantity").default(0).notNull(),
   lowStockThreshold: int("lowStockThreshold").default(5).notNull(),
@@ -352,8 +369,9 @@ export const products = mysqlTable("products", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 }, (table) => ({
-  categoryIdx: index("idx_products_category").on(table.category),
+  categoryIdx: index("idx_products_category").on(table.categoryId),
   skuIdx: index("idx_products_sku").on(table.sku),
+  publishedIdx: index("idx_products_published").on(table.isPublished),
 }));
 
 export type Product = typeof products.$inferSelect;

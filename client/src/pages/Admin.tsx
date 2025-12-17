@@ -146,7 +146,7 @@ function SubscribersTab() {
         />
         <StatsCard 
           title="סה״כ נרשמו" 
-          value={subscribers?.length || 0} 
+          value={subscribers?.items?.length || 0} 
           description="ב-20 האחרונים"
           icon={Users}
         />
@@ -166,7 +166,7 @@ function SubscribersTab() {
         <CardContent>
           {isLoading ? (
             <div className="text-center py-4">טוען...</div>
-          ) : subscribers && subscribers.length > 0 ? (
+          ) : subscribers?.items && subscribers.items.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -177,10 +177,10 @@ function SubscribersTab() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {subscribers.map((sub) => (
+                {subscribers.items.map((sub: any) => (
                   <TableRow key={sub.id}>
                     <TableCell className="font-medium">{sub.email}</TableCell>
-                    <TableCell>{sub.firstName || "-"} {sub.lastName || ""}</TableCell>
+                    <TableCell>{sub.name || "-"}</TableCell>
                     <TableCell>
                       {sub.createdAt ? new Date(sub.createdAt).toLocaleDateString("he-IL") : "-"}
                     </TableCell>

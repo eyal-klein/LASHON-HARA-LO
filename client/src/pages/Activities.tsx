@@ -150,8 +150,8 @@ export default function Activities() {
           ) : activities && activities.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {activities.map((activity) => {
-                const config = activityTypeConfig[activity.activityType] || activityTypeConfig.other;
-                const upcoming = activity.startDate ? isUpcoming(activity.startDate) : false;
+                const config = activityTypeConfig[activity.type] || activityTypeConfig.other;
+                const upcoming = activity.date ? isUpcoming(activity.date) : false;
                 
                 return (
                   <Card key={activity.id} className="overflow-hidden hover:shadow-lg transition-shadow">
@@ -183,16 +183,16 @@ export default function Activities() {
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 text-sm text-gray-600">
-                        {activity.startDate && (
+                        {activity.date && (
                           <div className="flex items-center gap-2">
                             <Calendar className="w-4 h-4 text-primary" />
-                            <span>{formatDate(activity.startDate)}</span>
+                            <span>{formatDate(activity.date)}</span>
                           </div>
                         )}
-                        {activity.startDate && (
+                        {activity.date && (
                           <div className="flex items-center gap-2">
                             <Clock className="w-4 h-4 text-primary" />
-                            <span>{formatTime(activity.startDate)}</span>
+                            <span>{formatTime(activity.date)}</span>
                           </div>
                         )}
                         {activity.location && (
@@ -201,19 +201,19 @@ export default function Activities() {
                             <span>{activity.location}</span>
                           </div>
                         )}
-                        {activity.maxParticipants && (
+                        {activity.participantCount && (
                           <div className="flex items-center gap-2">
                             <Users className="w-4 h-4 text-primary" />
                             <span>
-                              {activity.currentParticipants || 0}/{activity.maxParticipants} משתתפים
+                              {activity.participantCount || 0}/{activity.participantCount} משתתפים
                             </span>
                           </div>
                         )}
                       </div>
                       
-                      {activity.registrationUrl && upcoming && (
+                      {activity.location && upcoming && (
                         <a
-                          href={activity.registrationUrl}
+                          href={activity.location}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="mt-4 block"

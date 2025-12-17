@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { publicProcedure, router } from "../_core/trpc";
+import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 import { partnerships } from "../../drizzle/schema";
 import { notifyOwner } from "../_core/notification";
+import { eq, desc, and, count } from "drizzle-orm";
 
 // Partnership types
 const partnershipTypes = ["ambassador", "financial", "school", "inspiration"] as const;
@@ -27,7 +28,7 @@ const typeLabels: Record<typeof partnershipTypes[number], string> = {
 };
 
 export const partnershipsRouter = router({
-  // Submit a partnership application
+  // Submit a partnership application (public)
   submit: publicProcedure
     .input(createPartnershipSchema)
     .mutation(async ({ input }) => {
@@ -36,7 +37,7 @@ export const partnershipsRouter = router({
         throw new Error("Database not available");
       }
 
-      const result = await db.insert(partnerships).values({
+      const [result] = await db.insert(partnerships).values({
         type: input.type,
         name: input.name,
         email: input.email,
@@ -45,7 +46,7 @@ export const partnershipsRouter = router({
         role: input.role || null,
         message: input.message || null,
         status: "pending",
-      });
+      }).$returningId();
 
       // Notify owner about new partnership application
       const typeLabel = typeLabels[input.type];
@@ -56,7 +57,7 @@ export const partnershipsRouter = router({
 
       return {
         success: true,
-        id: result[0].insertId,
+        id: result.id,
         message: "הבקשה נשלחה בהצלחה! ניצור איתך קשר בהקדם",
       };
     }),
@@ -94,4 +95,102 @@ export const partnershipsRouter = router({
       },
     ];
   }),
+
+  // List partnership applications with pagination (admin only)
+  list: protectedProcedure
+    .input(z.object({
+      page: z.number().min(1).default(1),
+      limit: z.number().min(1).max(50).default(20),
+      type: z.enum(partnershipTypes).optional(),
+      status: z.enum(["pending", "reviewing", "approved", "rejected"]).optional(),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return { items: [], total: 0, page: 1, limit: 20 };
+      
+      const { page, limit, type, status } = input;
+      const offset = (page - 1) * limit;
+      
+      // Build where conditions
+      const conditions = [];
+      
+      if (type) {
+        conditions.push(eq(partnerships.type, type));
+      }
+      
+      if (status) {
+        conditions.push(eq(partnerships.status, status));
+      }
+      
+      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+      
+      const [items, totalResult] = await Promise.all([
+        db.select()
+          .from(partnerships)
+          .where(whereClause)
+          .orderBy(desc(partnerships.createdAt))
+          .limit(limit)
+          .offset(offset),
+        db.select({ count: count() })
+          .from(partnerships)
+          .where(whereClause),
+      ]);
+      
+      return {
+        items,
+        total: totalResult[0]?.count || 0,
+        page,
+        limit,
+      };
+    }),
+
+  // Get pending count (admin only)
+  getPendingCount: protectedProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return 0;
+    
+    const result = await db.select({ count: count() })
+      .from(partnerships)
+      .where(eq(partnerships.status, "pending"));
+    
+    return result[0]?.count || 0;
+  }),
+
+  // Update partnership status (admin only)
+  updateStatus: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      status: z.enum(["pending", "reviewing", "approved", "rejected"]),
+      notes: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      await db.update(partnerships)
+        .set({
+          status: input.status,
+          ...(input.notes && { notes: input.notes }),
+        })
+        .where(eq(partnerships.id, input.id));
+      
+      const [updated] = await db.select()
+        .from(partnerships)
+        .where(eq(partnerships.id, input.id))
+        .limit(1);
+      
+      return updated!;
+    }),
+
+  // Delete partnership (admin only)
+  delete: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      await db.delete(partnerships).where(eq(partnerships.id, input.id));
+      
+      return { success: true };
+    }),
 });

@@ -167,3 +167,70 @@ The website is complete with:
 - [x] Fixed category filter (removed invalid "all" value)
 - [x] Created DebugShop page for testing
 - [ ] Deploy to production and verify
+
+
+---
+
+## 🤖 RAG System + Content (Dec 17, 06:45)
+
+### RAG System
+- [x] Fix Chofetz Chaim scraper (correct URLs)
+- [x] Parse HTML and extract clean text
+- [x] Populate database with all content (338 chunks from 177 seifim)
+- [ ] Generate embeddings using Manus LLM
+- [ ] Build semantic search
+- [ ] Complete chatbot UI
+- [ ] Test with real questions
+
+### Content from Original Site (PRIORITY)
+- [x] Download and add logo (lh-logo.png)
+- [x] Download ALL product images from store (178 products with images!)
+- [x] Extract all product details (names, prices, descriptions)
+- [x] Copy homepage text and numbers
+- [x] Copy About page full content (4 sections imported to DB)
+- [x] Copy Contact details and info (in About page)
+- [x] Download all gallery images (24 images imported to gallery_items)
+- [x] Extract donation amounts and text (in About page)
+- [x] Copy activities/events content
+- [x] Update all database tables with real content (178 products, 7 categories, 24 gallery images, 4 content sections)
+
+### TypeScript & Code Quality
+- [ ] Fix all TypeScript errors in routers
+- [ ] Fix frontend TypeScript errors
+- [ ] Verify all imports are correct
+
+### E2E Testing (Comprehensive)
+- [ ] E2E: Homepage - all sections and CTAs
+- [ ] E2E: Store - product listing, filtering, categories
+- [ ] E2E: Product detail page
+- [ ] E2E: Gallery - image viewing
+- [ ] E2E: Activities - listing and filtering
+- [ ] E2E: Contact form - submission flow
+- [ ] E2E: Commitment form - full flow
+- [ ] E2E: Donations - payment flow
+- [ ] E2E: Admin login and authentication
+- [ ] E2E: Admin dashboard - all stats
+- [ ] E2E: Admin products management (CRUD)
+- [ ] E2E: Admin orders management
+- [ ] E2E: Admin gallery management
+- [ ] E2E: Admin activities management
+- [ ] E2E: Admin subscribers list
+- [ ] E2E: Admin contact messages
+- [ ] E2E: Admin partnerships
+- [ ] E2E: Navigation between all pages
+
+### CI/CD
+- [ ] Set up GitHub Actions workflow
+- [ ] Configure TypeScript checking in CI
+- [ ] Configure E2E tests in CI
+- [ ] Add build verification
+- [ ] Add deployment automation
+
+### Missing Router Implementations (CRITICAL)
+- [x] Activities Router - implement list, getById, getBySlug, create, update, delete
+- [x] Gallery Router - implement create, update, delete (admin)
+- [x] Contact Router - implement list, markAsRead, archive, getUnreadCount (admin)
+- [x] Partnerships Router - implement list, updateStatus, getPendingCount (admin)
+- [x] Fix Products Router tests (unique slug issue)
+- [x] Re-enable all skipped tests
+- [x] Verify 100% test pass rate (59/59 tests passing!)

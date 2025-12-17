@@ -1,0 +1,102 @@
+🚀 Starting Chofetz Chaim scraping (v3 - correct structure)...
+
+
+=== הלכות איסורי לשון הרע ===
+
+📖 Scraping כלל א (9 seifim)...
+  סעיף א...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_א/א
+ ⚠️  skipped
+  סעיף ב...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_א/ב
+ ⚠️  skipped
+  סעיף ג...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_א/ג
+ ⚠️  skipped
+  סעיף ד...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_א/ד
+ ⚠️  skipped
+  סעיף ה...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_א/ה
+ ⚠️  skipped
+  סעיף ו...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_א/ו
+ ⚠️  skipped
+  סעיף ז...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_א/ז
+ ⚠️  skipped
+  סעיף ח...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_א/ח
+ ⚠️  skipped
+  סעיף ט...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_א/ט
+ ⚠️  skipped
+
+📖 Scraping כלל ב (13 seifim)...
+  סעיף א...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ב/א
+ ⚠️  skipped
+  סעיף ב...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ב/ב
+ ⚠️  skipped
+  סעיף ג...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ב/ג
+ ⚠️  skipped
+  סעיף ד...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ב/ד
+ ⚠️  skipped
+  סעיף ה...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ב/ה
+ ⚠️  skipped
+  סעיף ו...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ב/ו
+ ⚠️  skipped
+  סעיף ז...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ב/ז
+ ⚠️  skipped
+  סעיף ח...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ב/ח
+ ⚠️  skipped
+  סעיף ט...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ב/ט
+ ⚠️  skipped
+  סעיף י...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ב/י
+ ⚠️  skipped
+  סעיף יא...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ב/יא
+ ⚠️  skipped
+  סעיף יב...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ב/יב
+ ⚠️  skipped
+  סעיף יג...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ב/יג
+ ⚠️  skipped
+
+📖 Scraping כלל ג (8 seifim)...
+  סעיף א...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ג/א
+ ⚠️  skipped
+  סעיף ב...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ג/ב
+ ⚠️  skipped
+  סעיף ג...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ג/ג
+ ⚠️  skipped
+  סעיף ד...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ג/ד
+ ⚠️  skipped
+  סעיף ה...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ג/ה
+ ⚠️  skipped
+  סעיף ו...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ג/ו
+ ⚠️  skipped
+  סעיף ז...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ג/ז
+ ⚠️  skipped
+  סעיף ח...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ג/ח
+ ⚠️  skipped
+
+📖 Scraping כלל ד (12 seifim)...
+  סעיף א...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ד/א
+ ⚠️  skipped
+  סעיף ב...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ד/ב
+ ⚠️  skipped
+  סעיף ג...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ד/ג
+ ⚠️  skipped
+  סעיף ד...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ד/ד
+ ⚠️  skipped
+  סעיף ה...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ד/ה
+ ⚠️  skipped
+  סעיף ו...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ד/ו
+ ⚠️  skipped
+  סעיף ז...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ד/ז
+ ⚠️  skipped
+  סעיף ח...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ד/ח
+ ⚠️  skipped
+  סעיף ט...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ד/ט
+ ⚠️  skipped
+  סעיף י...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ד/י
+ ⚠️  skipped
+  סעיף יא...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ד/יא
+ ⚠️  skipped
+  סעיף יב...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ד/יב
+ ⚠️  skipped
+
+📖 Scraping כלל ה (8 seifim)...
+  סעיף א...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ה/א
+ ⚠️  skipped
+  סעיף ב...  ⚠️  Page not found: חפץ_חיים/הלכות_איסורי_לשון_הרע/כלל_ה/ב
+ ⚠️  skipped

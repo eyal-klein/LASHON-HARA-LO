@@ -78,7 +78,7 @@ export const subscribersRouter = router({
     
     const result = await db.select({ count: count() })
       .from(subscribers)
-      .where(eq(subscribers.isActive, true));
+      .where(eq(subscribers.status, 'active'));
     return result[0]?.count || 0;
   }),
 
@@ -98,7 +98,7 @@ export const subscribersRouter = router({
       const { page, limit, activeOnly } = input;
       const offset = (page - 1) * limit;
       
-      const whereClause = activeOnly ? eq(subscribers.isActive, true) : undefined;
+      const whereClause = activeOnly ? eq(subscribers.status, 'active') : undefined;
       
       const [items, totalResult] = await Promise.all([
         db.select()
@@ -129,14 +129,13 @@ export const subscribersRouter = router({
       
       const items = await db.select().from(subscribers).orderBy(desc(subscribers.createdAt));
       
-      const headers = ["ID", "תאריך", "אימייל", "שם פרטי", "שם משפחה", "סטטוס", "מקור"];
+      const headers = ["ID", "תאריך", "אימייל", "שם", "סטטוס", "מקור"];
       const rows = items.map(item => [
         item.id,
         item.createdAt?.toISOString().split("T")[0] || "",
         item.email,
-        item.firstName || "",
-        item.lastName || "",
-        item.isActive ? "פעיל" : "לא פעיל",
+        item.name || "",
+        item.status,
         item.source || "",
       ]);
       

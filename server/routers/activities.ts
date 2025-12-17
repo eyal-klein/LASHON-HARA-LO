@@ -2,68 +2,64 @@ import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 import { activities } from "../../drizzle/schema";
-import { eq, desc, and, gte, count } from "drizzle-orm";
+import { eq, desc, and, gte, count, like } from "drizzle-orm";
 
 export const activitiesRouter = router({
-  // List activities (public)
+  // List activities with pagination (public)
   list: publicProcedure
     .input(z.object({
-      activityType: z.enum(["workshop", "distribution", "lecture", "campaign", "event", "other"]).optional(),
+      page: z.number().min(1).default(1),
+      limit: z.number().min(1).max(50).default(20),
+      type: z.enum(["distribution", "workshop", "exhibition", "campaign", "event", "school_program"]).optional(),
       upcoming: z.boolean().optional(),
-      limit: z.number().min(1).max(100).default(20),
-      offset: z.number().min(0).default(0),
+      featured: z.boolean().optional(),
     }))
     .query(async ({ input }) => {
       const db = await getDb();
-      if (!db) return [];
+      if (!db) return { items: [], total: 0, page: 1, limit: 20 };
       
-      if (input.activityType && input.upcoming) {
-        return await db.select()
-          .from(activities)
-          .where(and(
-            eq(activities.isPublished, true),
-            eq(activities.activityType, input.activityType),
-            gte(activities.startDate, new Date())
-          ))
-          .orderBy(desc(activities.startDate))
-          .limit(input.limit)
-          .offset(input.offset);
+      const { page, limit, type, upcoming, featured } = input;
+      const offset = (page - 1) * limit;
+      
+      // Build where conditions
+      const conditions = [eq(activities.isPublished, true)];
+      
+      if (type) {
+        conditions.push(eq(activities.type, type));
       }
       
-      if (input.activityType) {
-        return await db.select()
-          .from(activities)
-          .where(and(
-            eq(activities.isPublished, true),
-            eq(activities.activityType, input.activityType)
-          ))
-          .orderBy(desc(activities.startDate))
-          .limit(input.limit)
-          .offset(input.offset);
+      if (upcoming) {
+        conditions.push(gte(activities.date, new Date()));
       }
       
-      if (input.upcoming) {
-        return await db.select()
-          .from(activities)
-          .where(and(
-            eq(activities.isPublished, true),
-            gte(activities.startDate, new Date())
-          ))
-          .orderBy(desc(activities.startDate))
-          .limit(input.limit)
-          .offset(input.offset);
+      if (featured) {
+        conditions.push(eq(activities.isFeatured, true));
       }
       
-      return await db.select()
-        .from(activities)
-        .where(eq(activities.isPublished, true))
-        .orderBy(desc(activities.startDate))
-        .limit(input.limit)
-        .offset(input.offset);
+      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+      
+      const [items, totalResult] = await Promise.all([
+        db.select()
+          .from(activities)
+          .where(whereClause)
+          .orderBy(desc(activities.date))
+          .limit(limit)
+          .offset(offset),
+        db.select({ count: count() })
+          .from(activities)
+          .where(whereClause),
+      ]);
+      
+      return {
+        items,
+        total: totalResult[0]?.count || 0,
+        page,
+        limit,
+      };
     }),
 
-  // Get single activity
-  get: publicProcedure
+  // Get activity by ID (public)
+  getById: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
@@ -71,12 +67,34 @@ export const activitiesRouter = router({
       
       const items = await db.select()
         .from(activities)
-        .where(eq(activities.id, input.id))
+        .where(and(
+          eq(activities.id, input.id),
+          eq(activities.isPublished, true)
+        ))
         .limit(1);
+      
       return items[0] || null;
     }),
 
-  // Get upcoming activities count
+  // Get activity by slug (public)
+  getBySlug: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return null;
+      
+      const items = await db.select()
+        .from(activities)
+        .where(and(
+          eq(activities.slug, input.slug),
+          eq(activities.isPublished, true)
+        ))
+        .limit(1);
+      
+      return items[0] || null;
+    }),
+
+  // Get upcoming activities count (public)
   upcomingCount: publicProcedure.query(async () => {
     const db = await getDb();
     if (!db) return 0;
@@ -85,75 +103,95 @@ export const activitiesRouter = router({
       .from(activities)
       .where(and(
         eq(activities.isPublished, true),
-        gte(activities.startDate, new Date())
+        gte(activities.date, new Date())
       ));
+    
     return result[0]?.count || 0;
   }),
 
   // Create activity (admin only)
   create: protectedProcedure
     .input(z.object({
-      title: z.string().min(1),
-      description: z.string().optional(),
-      activityType: z.enum(["workshop", "distribution", "lecture", "campaign", "event", "other"]),
-      startDate: z.date(),
-      endDate: z.date().optional(),
-      location: z.string().optional(),
-      address: z.string().optional(),
-      maxParticipants: z.number().optional(),
+      title: z.string().min(1).max(200),
+      slug: z.string().min(1).max(200),
+      description: z.string(),
+      shortDescription: z.string().max(300).optional(),
+      type: z.enum(["distribution", "workshop", "exhibition", "campaign", "event", "school_program"]),
       imageUrl: z.string().url().optional(),
-      registrationUrl: z.string().url().optional(),
+      galleryImages: z.array(z.string().url()).optional(),
+      date: z.date().optional(),
+      endDate: z.date().optional(),
+      location: z.string().max(200).optional(),
+      participantCount: z.number().int().optional(),
       isPublished: z.boolean().default(true),
+      isFeatured: z.boolean().default(false),
     }))
     .mutation(async ({ input, ctx }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      const result = await db.insert(activities).values({
+      const [result] = await db.insert(activities).values({
         ...input,
-        currentParticipants: 0,
-        createdBy: ctx.user.id,
-      });
+        galleryImages: input.galleryImages ? JSON.stringify(input.galleryImages) : null,
+        createdBy: ctx.user?.id || null,
+      }).$returningId();
       
-      return { success: true, id: result[0].insertId };
+      const [created] = await db.select()
+        .from(activities)
+        .where(eq(activities.id, result.id))
+        .limit(1);
+      
+      return created!;
     }),
 
   // Update activity (admin only)
   update: protectedProcedure
     .input(z.object({
       id: z.number(),
-      title: z.string().min(1).optional(),
+      title: z.string().min(1).max(200).optional(),
+      slug: z.string().min(1).max(200).optional(),
       description: z.string().optional(),
-      activityType: z.enum(["workshop", "distribution", "lecture", "campaign", "event", "other"]).optional(),
-      startDate: z.date().optional(),
-      endDate: z.date().optional(),
-      location: z.string().optional(),
-      address: z.string().optional(),
-      maxParticipants: z.number().optional(),
+      shortDescription: z.string().max(300).optional(),
+      type: z.enum(["distribution", "workshop", "exhibition", "campaign", "event", "school_program"]).optional(),
       imageUrl: z.string().url().optional(),
-      registrationUrl: z.string().url().optional(),
+      galleryImages: z.array(z.string().url()).optional(),
+      date: z.date().optional(),
+      endDate: z.date().optional(),
+      location: z.string().max(200).optional(),
+      participantCount: z.number().int().optional(),
       isPublished: z.boolean().optional(),
+      isFeatured: z.boolean().optional(),
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
-      const { id, ...data } = input;
+      const { id, galleryImages, ...data } = input;
+      
       await db.update(activities)
-        .set({ ...data, updatedAt: new Date() })
+        .set({
+          ...data,
+          ...(galleryImages && { galleryImages: JSON.stringify(galleryImages) }),
+        })
         .where(eq(activities.id, id));
       
-      return { success: true };
+      const [updated] = await db.select()
+        .from(activities)
+        .where(eq(activities.id, id))
+        .limit(1);
+      
+      return updated!;
     }),
 
   // Delete activity (admin only)
-  deleteActivity: protectedProcedure
+  delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       
       await db.delete(activities).where(eq(activities.id, input.id));
+      
       return { success: true };
     }),
 });

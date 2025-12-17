@@ -22,6 +22,20 @@
       "when": 1765902645443,
       "tag": "0002_bent_roulette",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1765973117863,
+      "tag": "0003_uneven_bloodaxe",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1765974782940,
+      "tag": "0004_nappy_pet_avengers",
+      "breakpoints": true
     }
   ]
 }

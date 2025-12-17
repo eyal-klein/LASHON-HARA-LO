@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { router, publicProcedure, protectedProcedure } from "../_core/trpc";
 import { getDb } from "../db";
-import { products } from "../../drizzle/schema";
+import { products, productCategories } from "../../drizzle/schema";
 import { eq, desc, and, like, gte, lte, count, sql } from "drizzle-orm";
 
 const ProductInput = z.object({
@@ -11,7 +11,7 @@ const ProductInput = z.object({
   compareAtPrice: z.number().min(0).optional(),
   sku: z.string().max(100).optional(),
   barcode: z.string().max(100).optional(),
-  category: z.enum(["books", "bracelets", "stickers", "posters", "other"]),
+  categoryId: z.number().int().positive().optional(),
   images: z.array(z.string().url()).min(1),
   stockQuantity: z.number().min(0).default(0),
   lowStockThreshold: z.number().min(0).default(5),
@@ -137,15 +137,17 @@ export const productsRouter = router({
         throw new Error("Database not available");
       }
 
-      const result = await db.insert(products).values({
+      const [result] = await db.insert(products).values({
         ...input,
         images: JSON.stringify(input.images),
-      });
+      }).$returningId();
 
-      return {
-        id: result[0].insertId,
-        success: true,
-      };
+      const [created] = await db
+        .select()
+        .from(products)
+        .where(eq(products.id, result.id));
+
+      return created!;
     }),
 
   // Admin: Update product
@@ -312,4 +314,37 @@ export const productsRouter = router({
 
     return items;
   }),
+
+  // Public: List all categories
+  listCategories: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) {
+      return [];
+    }
+
+    const categories = await db
+      .select()
+      .from(productCategories)
+      .where(eq(productCategories.isActive, true))
+      .orderBy(productCategories.sortOrder);
+
+    return categories;
+  }),
+
+  // Public: Get category by ID
+  getCategoryById: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        return null;
+      }
+
+      const [category] = await db
+        .select()
+        .from(productCategories)
+        .where(eq(productCategories.id, input.id));
+
+      return category || null;
+    }),
 });
