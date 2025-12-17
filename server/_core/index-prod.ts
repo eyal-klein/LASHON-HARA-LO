@@ -9,6 +9,9 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 
 function serveStatic(app: express.Express) {
+  // In production, the built files are in dist/public
+  // and index.js is in dist/index.js
+  // So we need to go up one level from dist/ to find dist/public
   const distPath = path.resolve(import.meta.dirname, "public");
   
   if (!fs.existsSync(distPath)) {

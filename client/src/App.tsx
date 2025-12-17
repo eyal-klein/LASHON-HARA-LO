@@ -46,11 +46,15 @@ function Router() {
     <Switch>
       <Route path={"/"} component={HomeNew} />
       <Route path={"/about"} component={AboutNew} />
+      <Route path={"/contact-new"} component={ContactNew} />
       <Route path={"/contact"} component={ContactNew} />
       <Route path={"/join"} component={Join} />
       <Route path={"/donate"} component={Donate} />
+      <Route path={"/gallery-new"} component={GalleryNew} />
       <Route path={"/gallery"} component={GalleryNew} />
+      <Route path={"/activities-new"} component={ActivitiesNew} />
       <Route path={"/activities"} component={ActivitiesNew} />
+      <Route path={"/store-new"} component={StoreNew} />
       <Route path={"/store"} component={StoreNew} />
       <Route path="/product/:id" component={ProductDetailNew} />
       <Route path="/chatbot" component={ChatbotNew} />

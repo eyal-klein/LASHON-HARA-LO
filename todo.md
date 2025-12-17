@@ -157,6 +157,15 @@ The website is complete with:
 
 ---
 
+## 🚨 CRITICAL PRODUCTION BUGS (Dec 17, 10:00)
+
+- [ ] **URGENT: Fix 404 errors in production deployment**
+  - Multiple pages returning 404 in production
+  - Need to diagnose routing configuration
+  - Check build output and static file serving
+  - Verify deployment settings in Cloud Run
+  - Test all routes after fix
+
 ## ✅ CRITICAL BUGS FIXED (Dec 16, 12:20)
 
 - [x] Fixed navigation links - replaced <a> with <Link> from wouter (ALL PAGES)
