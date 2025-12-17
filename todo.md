@@ -159,12 +159,11 @@ The website is complete with:
 
 ## 🚨 CRITICAL PRODUCTION BUGS (Dec 17, 10:00)
 
-- [ ] **URGENT: Fix 404 errors in production deployment**
-  - Multiple pages returning 404 in production
-  - Need to diagnose routing configuration
-  - Check build output and static file serving
-  - Verify deployment settings in Cloud Run
-  - Test all routes after fix
+- [x] **URGENT: Fix 404 errors in production deployment**
+  - Fixed routing: added -new route variants to match navigation links
+  - Fixed CI: added db:push before tests
+  - Deployment successful
+  - All routes working in production
 
 ## ✅ CRITICAL BUGS FIXED (Dec 16, 12:20)
 
