@@ -337,3 +337,25 @@ The website is complete with:
 - [ ] Implement quantity management
 - [ ] Implement remove from cart
 - [ ] Test cart persistence across page reloads
+
+### Final Polish
+
+#### TypeScript Errors
+- [ ] Fix schema exports for partnerships, products, productCategories, subscribers
+- [ ] Verify all router imports are correct
+- [ ] Run tsc --noEmit to confirm 0 errors
+- [ ] Fix any remaining type issues
+
+#### Logo & Branding
+- [ ] Download official logo from original site
+- [ ] Add logo to homepage hero section
+- [ ] Add logo to navigation bar
+- [ ] Ensure logo matches brand book specifications
+
+#### Documentation
+- [ ] Create README.md with project overview
+- [ ] Add installation instructions
+- [ ] Document project structure
+- [ ] Add API documentation
+- [ ] Add deployment guide
+- [ ] Add environment variables reference

@@ -109,6 +109,15 @@ function HeroSection() {
       {/* Content */}
       <div className="container relative z-10 text-center text-white">
         <div className="max-w-5xl mx-auto">
+          {/* Logo */}
+          <div className="mb-8 animate-fade-in">
+            <img
+              src="/images/lh-logo.png"
+              alt="לשון הרע לא מדבר אליי"
+              className="h-32 md:h-40 lg:h-48 w-auto mx-auto drop-shadow-2xl"
+            />
+          </div>
+
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 animate-fade-in">
             לשון הרע{" "}
             <span className="text-yellow-300 drop-shadow-lg">לא מדבר</span>{" "}
