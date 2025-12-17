@@ -19,6 +19,8 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useCart } from "@/contexts/CartContext";
+import { NavigationWithCart } from "@/components/NavigationWithCart";
 
 export default function ProductDetailNew() {
   const [, params] = useRoute("/product/:id");
@@ -37,6 +39,7 @@ export default function ProductDetailNew() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const { addItem } = useCart();
 
   if (isLoading) {
     return (
@@ -65,6 +68,17 @@ export default function ProductDetailNew() {
   const images = product.images || ["/placeholder-product.png"];
 
   const handleAddToCart = () => {
+    if (!product) return;
+    addItem(
+      {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.images?.[0] || "/placeholder-product.png",
+        slug: product.slug,
+      },
+      quantity
+    );
     toast.success(`${product.name} נוסף לעגלה!`, {
       description: `כמות: ${quantity}`,
     });
@@ -77,6 +91,7 @@ export default function ProductDetailNew() {
 
   return (
     <div className="min-h-screen bg-background">
+      <NavigationWithCart />
       {/* Breadcrumb */}
       <div className="border-b bg-white">
         <div className="container py-4">

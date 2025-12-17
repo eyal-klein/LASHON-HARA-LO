@@ -7,6 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ShoppingBag, Search, Filter } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { NavigationWithCart } from "@/components/NavigationWithCart";
+import { toast } from "sonner";
 
 function Header() {
   return (
@@ -32,6 +35,7 @@ function Header() {
 }
 
 export default function StoreNew() {
+  const { addItem } = useCart();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
@@ -47,7 +51,7 @@ export default function StoreNew() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <NavigationWithCart />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-l from-blue-600 to-purple-600 text-white py-16">
@@ -155,10 +159,25 @@ export default function StoreNew() {
                           )}
                         </div>
                       </CardContent>
-                      <CardFooter>
+                      <CardFooter className="flex gap-2">
+                        <Link href={`/product/${product.id}`} className="flex-1">
+                          <Button variant="outline" className="w-full">
+                            פרטים
+                          </Button>
+                        </Link>
                         <Button 
-                          className="w-full" 
+                          className="flex-1" 
                           disabled={stockQuantity === 0}
+                          onClick={() => {
+                            addItem({
+                              id: product.id,
+                              name: product.name,
+                              price: Number(product.price),
+                              image: firstImage || "/placeholder-product.png",
+                              slug: product.slug,
+                            });
+                            toast.success(`${product.name} נוסף לעגלה!`);
+                          }}
                         >
                           <ShoppingBag className="h-4 w-4 ml-2" />
                           {stockQuantity === 0 ? "אזל מהמלאי" : "הוסף לסל"}

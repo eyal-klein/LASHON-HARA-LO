@@ -4,6 +4,8 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { CartProvider } from "./contexts/CartContext";
+import { Cart } from "./components/Cart";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -42,22 +44,16 @@ import ChatbotNew from "./pages/ChatbotNew";
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/about"} component={About} />
-      <Route path={"/contact"} component={Contact} />
+      <Route path={"/"} component={HomeNew} />
+      <Route path={"/about"} component={AboutNew} />
+      <Route path={"/contact"} component={ContactNew} />
       <Route path={"/join"} component={Join} />
       <Route path={"/donate"} component={Donate} />
-      <Route path={"/gallery"} component={Gallery} />
-      <Route path={"/activities"} component={Activities} />
-      <Route path={"/store"} component={Store} />
-          <Route path="/store-new" component={StoreNew} />
-          <Route path="/home-new" component={HomeNew} />
-          <Route path="/product/:id" component={ProductDetailNew} />
-          <Route path="/about-new" component={AboutNew} />
-      <Route path="/gallery-new" component={GalleryNew} />
-      <Route path="/activities-new" component={ActivitiesNew} />
-      <Route path="/contact-new" component={ContactNew} />
-      <Route path="/chatbot-new" component={ChatbotNew} />
+      <Route path={"/gallery"} component={GalleryNew} />
+      <Route path={"/activities"} component={ActivitiesNew} />
+      <Route path={"/store"} component={StoreNew} />
+      <Route path="/product/:id" component={ProductDetailNew} />
+      <Route path="/chatbot" component={ChatbotNew} />
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/chofetz-chaim"} component={ChofetzChaim} />
       <Route path={"/shop"} component={Shop} />
@@ -93,10 +89,13 @@ function App() {
         defaultTheme="light"
         // switchable
       >
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
+        <CartProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+            <Cart />
+          </TooltipProvider>
+        </CartProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

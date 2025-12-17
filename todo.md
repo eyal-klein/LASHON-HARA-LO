@@ -318,3 +318,22 @@ The website is complete with:
 - [x] AboutNew - display 4 content sections from content table (created content router)
 - [x] HomeNew - use real statistics from database
 - [x] Test all pages with real content
+
+### Page Replacement & Shopping Cart
+
+#### Replace Old Pages
+- [ ] Replace Home route with HomeNew
+- [ ] Replace Gallery route with GalleryNew
+- [ ] Replace Activities route with ActivitiesNew
+- [ ] Replace About route with AboutNew
+- [ ] Replace Contact route with ContactNew
+- [ ] Update all internal Links to use new routes
+
+#### Shopping Cart Implementation
+- [ ] Create CartContext with localStorage
+- [ ] Build Cart UI component (sidebar drawer)
+- [ ] Add cart icon to navigation with badge
+- [ ] Implement add to cart functionality
+- [ ] Implement quantity management
+- [ ] Implement remove from cart
+- [ ] Test cart persistence across page reloads
