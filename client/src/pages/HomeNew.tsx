@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Header } from "@/components/Header";
 import { Card, CardContent } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import {
@@ -30,8 +31,8 @@ export default function HomeNew() {
   );
 }
 
-// Header Component
-function Header() {
+// Header Component - using shared component
+function HeaderOld() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {

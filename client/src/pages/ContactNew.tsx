@@ -1,3 +1,4 @@
+import { Header } from "@/components/Header";
 import { useState } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
@@ -10,28 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Mail, Phone, MapPin, Send, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-function Header() {
-  return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container py-4">
-        <nav className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
-            <img src="/lh-logo.png" alt="לשון הרע לא מדבר אליי" className="h-12" />
-          </Link>
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="/about" className="text-gray-600 hover:text-primary transition-colors">אודות</Link>
-            <Link href="/activities-new" className="text-gray-600 hover:text-primary transition-colors">הפעילות שלנו</Link>
-            <Link href="/gallery-new" className="text-gray-600 hover:text-primary transition-colors">גלריה</Link>
-            <Link href="/join" className="text-gray-600 hover:text-primary transition-colors">הצטרפו אלינו</Link>
-            <Link href="/donate" className="text-gray-600 hover:text-primary transition-colors">תרומה</Link>
-            <Link href="/contact-new" className="text-primary font-medium">צרו קשר</Link>
-            <Link href="/store-new" className="text-gray-600 hover:text-primary transition-colors">חנות</Link>
-          </div>
-        </nav>
-      </div>
-    </header>
-  );
-}
+
 
 export default function ContactNew() {
   const [submitted, setSubmitted] = useState(false);
