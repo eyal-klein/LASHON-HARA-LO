@@ -271,3 +271,24 @@ The website is complete with:
 - [ ] Build verification
 - [ ] Deployment automation
 - [ ] Environment variables management
+
+### New Features - Phase 2
+
+#### Frontend Pages (Modern Design + RTL)
+- [x] Gallery Page - lightbox, categories, filtering
+- [x] Activities Page - list, filtering, registration form
+- [x] Contact Page - styled form with validation
+- [x] Chatbot UI - streaming responses, conversation history
+
+#### Shopping Cart + Stripe
+- [ ] Cart Context - state management
+- [ ] Cart UI - add/remove items, quantities
+- [ ] Stripe Integration - payment processing
+- [ ] Checkout Flow - complete order process
+- [ ] Order Confirmation - success page
+
+#### Email Notifications
+- [x] Email Templates - HTML templates (4 templates created)
+- [x] Order Confirmations - send to customers
+- [x] Status Updates - order status changes
+- [x] Admin Notifications - new orders, messages, partnerships

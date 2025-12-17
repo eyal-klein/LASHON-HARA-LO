@@ -31,6 +31,10 @@ import AdminPartnerships from "./pages/admin/Partnerships";
 import AdminDonationsPage from "./pages/admin/Donations";
 import AdminCommitments from "./pages/admin/Commitments";
 import StoreNew from "./pages/StoreNew";
+import GalleryNew from "./pages/GalleryNew";
+import ActivitiesNew from "./pages/ActivitiesNew";
+import ContactNew from "./pages/ContactNew";
+import ChatbotNew from "./pages/ChatbotNew";
 
 function Router() {
   return (
@@ -43,7 +47,11 @@ function Router() {
       <Route path={"/gallery"} component={Gallery} />
       <Route path={"/activities"} component={Activities} />
       <Route path={"/store"} component={Store} />
-      <Route path={"/store-new"} component={StoreNew} />
+      <Route path="/store-new" component={StoreNew} />
+      <Route path="/gallery-new" component={GalleryNew} />
+      <Route path="/activities-new" component={ActivitiesNew} />
+      <Route path="/contact-new" component={ContactNew} />
+      <Route path="/chatbot-new" component={ChatbotNew} />
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/chofetz-chaim"} component={ChofetzChaim} />
       <Route path={"/shop"} component={Shop} />
