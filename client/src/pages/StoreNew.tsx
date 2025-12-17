@@ -40,7 +40,7 @@ export default function StoreNew() {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
 
-  const { data: productsData, isLoading } = trpc.products.listAll.useQuery({
+  const { data: productsData, isLoading } = trpc.products.list.useQuery({
     page,
     limit: 12,
     search: search || undefined,
