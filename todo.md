@@ -157,6 +157,15 @@ The website is complete with:
 
 ---
 
+## 🚨 CRITICAL OAUTH ISSUE (Dec 17, 11:00)
+
+- [ ] **URGENT: Public pages redirecting to Manus OAuth login**
+  - Store page requires login - redirects to manus.im/app-auth
+  - Exposes Manus branding to client
+  - All public pages should work without authentication
+  - Only /admin/* pages should require login
+  - Need to remove auth guards from public routes
+
 ## 🚨 CRITICAL PRODUCTION BUGS (Dec 17, 10:00)
 
 - [ ] **URGENT: Fix production deployment issues**
