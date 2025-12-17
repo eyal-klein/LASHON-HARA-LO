@@ -375,3 +375,11 @@ The website is complete with:
 - [ ] Add API documentation
 - [ ] Add deployment guide
 - [ ] Add environment variables reference
+
+
+## 🚨 NEW PRODUCTION ISSUES (Dec 17, 12:10)
+
+- [ ] **Logo not loading** - /lh-logo.png missing from client/public
+- [ ] **/shop route crashes** - SyntaxError: Unexpected token in JSON
+- [ ] **Product images not loading** - Need to check image URLs
+- [ ] **Categories incorrect** - Need to fix category names/values

@@ -17,7 +17,7 @@ function Header() {
       <div className="container py-4">
         <nav className="flex items-center justify-between">
           <Link href="/" className="text-2xl font-bold text-gray-900">
-            <img src="/lh-logo.png" alt="לשון הרע לא מדבר אליי" className="h-12" />
+            <img src="/images/lh-logo.png" alt="לשון הרע לא מדבר אליי" className="h-12" />
           </Link>
           <div className="hidden md:flex items-center gap-6">
             <Link href="/about" className="text-gray-600 hover:text-primary transition-colors">אודות</Link>
@@ -85,9 +85,9 @@ export default function StoreNew() {
                 <SelectValue placeholder="כל הקטגוריות" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">כל הקטגוריות</SelectItem>
+                <SelectItem value="">כל הקטגוריות</SelectItem>
                 {categories?.map((cat) => (
-                  <SelectItem key={cat.id} value={cat.id.toString()}>
+                  <SelectItem key={cat.id} value={cat.slug}>
                     {cat.name}
                   </SelectItem>
                 ))}

@@ -60,7 +60,7 @@ function Router() {
       <Route path="/chatbot" component={ChatbotNew} />
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/chofetz-chaim"} component={ChofetzChaim} />
-      <Route path={"/shop"} component={Shop} />
+      <Route path={"/shop"} component={StoreNew} />
       <Route path={"/debug-shop"} component={DebugShop} />
       <Route path={"/shop/:id"} component={ProductDetail} />
       <Route path={"/admin/donations"} component={AdminDonations} />

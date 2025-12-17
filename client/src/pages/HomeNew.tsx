@@ -63,7 +63,7 @@ function Header() {
           <Link href="/">
             <a className="flex items-center gap-3">
               <img
-                src="/lh-logo.png"
+                src="/images/lh-logo.png"
                 alt="לשון הרע לא מדבר אליי"
                 className="h-14 w-auto"
               />
@@ -540,7 +540,7 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
             <img
-              src="/lh-logo.png"
+              src="/images/lh-logo.png"
               alt="לשון הרע לא מדבר אליי"
               className="h-16 w-auto mb-4"
             />
