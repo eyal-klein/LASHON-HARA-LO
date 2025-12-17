@@ -358,3 +358,4 @@ For technical support or questions:
 ---
 
 **Built with ❤️ by the Lashon Hara Lo Medaber Elay team**
+# Deployment with all secrets configured
