@@ -44,7 +44,7 @@ export default function StoreNew() {
     page,
     limit: 12,
     search: search || undefined,
-    category: selectedCategory as any,
+    category: selectedCategory === "all" ? undefined : (selectedCategory as any),
   });
 
   const { data: categories } = trpc.products.listCategories.useQuery();
