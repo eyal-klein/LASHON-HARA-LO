@@ -292,3 +292,21 @@ The website is complete with:
 - [x] Order Confirmations - send to customers
 - [x] Status Updates - order status changes
 - [x] Admin Notifications - new orders, messages, partnerships
+
+### Phase 3 - Homepage & Product Details
+
+#### Homepage Redesign
+- [ ] Hero section with gradient and animations
+- [ ] Live statistics (commitments, ambassadors, schools)
+- [ ] Featured products carousel
+- [ ] Activities preview section
+- [ ] Testimonials/Impact stories
+- [ ] Bold CTAs (donate, join, shop)
+
+#### Product Detail Pages
+- [ ] Image gallery with zoom
+- [ ] Detailed description + specifications
+- [ ] Size/color selection (if applicable)
+- [ ] Add to cart button
+- [ ] Related products
+- [ ] Reviews/ratings section
