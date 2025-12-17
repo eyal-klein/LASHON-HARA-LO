@@ -37,7 +37,7 @@ export default function GalleryNew() {
 
   const { data: galleryData, isLoading } = trpc.gallery.list.useQuery({
     page: 1,
-    limit: 100,
+    limit: 50,
     category: selectedCategory,
   });
 

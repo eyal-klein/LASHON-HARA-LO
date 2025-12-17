@@ -30,6 +30,7 @@ import AdminMessages from "./pages/admin/Messages";
 import AdminPartnerships from "./pages/admin/Partnerships";
 import HomeNew from "./pages/HomeNew";
 import ProductDetailNew from "./pages/ProductDetailNew";
+import AboutNew from "./pages/AboutNew";
 import AdminDonationsPage from "./pages/admin/Donations";
 import AdminCommitments from "./pages/admin/Commitments";
 import StoreNew from "./pages/StoreNew";
@@ -52,6 +53,7 @@ function Router() {
           <Route path="/store-new" component={StoreNew} />
           <Route path="/home-new" component={HomeNew} />
           <Route path="/product/:id" component={ProductDetailNew} />
+          <Route path="/about-new" component={AboutNew} />
       <Route path="/gallery-new" component={GalleryNew} />
       <Route path="/activities-new" component={ActivitiesNew} />
       <Route path="/contact-new" component={ContactNew} />

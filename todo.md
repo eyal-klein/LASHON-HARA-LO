@@ -310,3 +310,11 @@ The website is complete with:
 - [ ] Add to cart button
 - [ ] Related products
 - [ ] Reviews/ratings section
+
+### Real Content Migration (Connect Frontend to DB)
+
+- [x] GalleryNew - display 24 real images from gallery_items table
+- [x] ActivitiesNew - display real activities from activities table
+- [x] AboutNew - display 4 content sections from content table (created content router)
+- [x] HomeNew - use real statistics from database
+- [x] Test all pages with real content
