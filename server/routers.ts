@@ -2,10 +2,22 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
+import { commitmentsRouter } from "./routers/commitments";
+import { contactRouter } from "./routers/contact";
+import { partnershipsRouter } from "./routers/partnerships";
+import { subscribersRouter } from "./routers/subscribers";
+import { galleryRouter } from "./routers/gallery";
+import { activitiesRouter } from "./routers/activities";
+import { chofetzChaimRouter } from "./routers/chofetzChaim";
+import { donationsRouter } from "./routers/donations";
+import { productsRouter } from "./routers/products";
+import { ordersRouter } from "./routers/orders";
 
 export const appRouter = router({
-    // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
+  // System router (notifications, etc.)
   system: systemRouter,
+  
+  // Authentication
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
@@ -17,12 +29,17 @@ export const appRouter = router({
     }),
   }),
 
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  // Feature routers
+  commitments: commitmentsRouter,
+  contact: contactRouter,
+  partnerships: partnershipsRouter,
+  subscribers: subscribersRouter,
+  gallery: galleryRouter,
+  activities: activitiesRouter,
+  chofetzChaim: chofetzChaimRouter,
+  donations: donationsRouter,
+  products: productsRouter,
+  orders: ordersRouter,
 });
 
 export type AppRouter = typeof appRouter;

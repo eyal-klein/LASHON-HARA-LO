@@ -1,0 +1,148 @@
+/**
+ * Scrape Chofetz Chaim content from Wikisource - CORRECT VERSION
+ * Each seif is a separate page in Wikisource
+ */
+
+import fs from 'fs/promises';
+import path from 'path';
+
+const WIKISOURCE_API = 'https://he.wikisource.org/w/api.php';
+const OUTPUT_DIR = './data/chofetz-chaim';
+
+// Sleep helper
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function fetchPage(pageTitle) {
+  const params = new URLSearchParams({
+    action: 'parse',
+    page: pageTitle,
+    format: 'json',
+    prop: 'text',
+    formatversion: '2',
+  });
+
+  const response = await fetch(`${WIKISOURCE_API}?${params}`);
+  const data = await response.json();
+
+  if (data.error) {
+    console.log(`  ⚠️  Page not found: ${pageTitle}`);
+    return null;
+  }
+
+  return data.parse.text;
+}
+
+// Klal structure from Wikisource research
+const KLALIM = {
+  lashon_hara: [
+    { num: 'א', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'] },
+    { num: 'ב', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'יא', 'יב', 'יג'] },
+    { num: 'ג', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח'] },
+    { num: 'ד', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'יא', 'יב'] },
+    { num: 'ה', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח'] },
+    { num: 'ו', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'יא', 'יב'] },
+    { num: 'ז', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'יא', 'יב', 'יג', 'יד'] },
+    { num: 'ח', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'יא', 'יב', 'יג', 'יד'] },
+    { num: 'ט', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'יא', 'יב', 'יג', 'יד', 'טו'] },
+    { num: 'י', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'יא', 'יב', 'יג', 'יד', 'טו', 'טז', 'יז', 'יח'] }
+  ],
+  rechilut: [
+    { num: 'א', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'יא'] },
+    { num: 'ב', seifim: ['א', 'ב', 'ג', 'ד', 'ה'] },
+    { num: 'ג', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו'] },
+    { num: 'ד', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'יא', 'יב'] },
+    { num: 'ה', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח'] },
+    { num: 'ו', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י'] },
+    { num: 'ז', seifim: ['א', 'ב', 'ג', 'ד', 'ה'] },
+    { num: 'ח', seifim: ['א', 'ב', 'ג', 'ד', 'ה'] },
+    { num: 'ט', seifim: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'יא', 'יב', 'יג', 'יד', 'טו'] }
+  ]
+};
+
+async function scrapeSeif(section, klalNum, seifLetter) {
+  const sectionName = section === 'lashon_hara' ? 'לשון_הרע' : 'רכילות';
+  const pageTitle = `חפץ_חיים/הלכות_איסורי_${sectionName}/כלל_${klalNum}/${seifLetter}`;
+
+  try {
+    const html = await fetchPage(pageTitle);
+    if (!html) return null;
+
+    return {
+      seifLetter,
+      content: html,
+      url: `https://he.wikisource.org/wiki/${pageTitle}`
+    };
+  } catch (error) {
+    console.log(`  ❌ Error: ${error.message}`);
+    return null;
+  }
+}
+
+async function scrapeKlal(section, klalInfo) {
+  const { num, seifim } = klalInfo;
+  console.log(`\n📖 Scraping כלל ${num} (${seifim.length} seifim)...`);
+
+  const klalData = {
+    title: `כלל ${num}`,
+    seifim: []
+  };
+
+  for (const seifLetter of seifim) {
+    process.stdout.write(`  סעיף ${seifLetter}...`);
+    const seif = await scrapeSeif(section, num, seifLetter);
+    
+    if (seif) {
+      klalData.seifim.push(seif);
+      console.log(' ✅');
+    } else {
+      console.log(' ⚠️  skipped');
+    }
+    
+    await sleep(500); // Be nice to Wikisource
+  }
+
+  return klalData;
+}
+
+async function main() {
+  console.log('🚀 Starting Chofetz Chaim scraping (v3 - correct structure)...\n');
+
+  await fs.mkdir(OUTPUT_DIR, { recursive: true });
+
+  const allData = {
+    lashon_hara: [],
+    rechilut: []
+  };
+
+  // Scrape Lashon Hara
+  console.log('\n=== הלכות איסורי לשון הרע ===');
+  for (const klalInfo of KLALIM.lashon_hara) {
+    const klal = await scrapeKlal('lashon_hara', klalInfo);
+    allData.lashon_hara.push(klal);
+  }
+
+  // Scrape Rechilut
+  console.log('\n=== הלכות איסורי רכילות ===');
+  for (const klalInfo of KLALIM.rechilut) {
+    const klal = await scrapeKlal('rechilut', klalInfo);
+    allData.rechilut.push(klal);
+  }
+
+  // Save
+  const outputPath = path.join(OUTPUT_DIR, 'chofetz-chaim-raw.json');
+  await fs.writeFile(outputPath, JSON.stringify(allData, null, 2), 'utf-8');
+
+  // Stats
+  const totalSeifim = [
+    ...allData.lashon_hara,
+    ...allData.rechilut
+  ].reduce((sum, klal) => sum + klal.seifim.length, 0);
+
+  console.log(`\n✅ Scraping complete!`);
+  console.log(`📁 Saved to: ${outputPath}`);
+  console.log(`   - Lashon Hara: ${allData.lashon_hara.length} klalim`);
+  console.log(`   - Rechilut: ${allData.rechilut.length} klalim`);
+  console.log(`   - Total seifim: ${totalSeifim}`);
+}
+
+main().catch(console.error);

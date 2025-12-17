@@ -6,7 +6,6 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
-import { serveStatic, setupVite } from "./vite";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -43,23 +42,34 @@ async function startServer() {
       createContext,
     })
   );
+  
   // development mode uses Vite, production mode uses static files
+  // Use dynamic import to avoid loading vite in production
   if (process.env.NODE_ENV === "development") {
+    const { setupVite } = await import("./vite");
     await setupVite(app, server);
   } else {
+    const { serveStatic } = await import("./vite-prod");
     serveStatic(app);
   }
 
-  const preferredPort = parseInt(process.env.PORT || "3000");
-  const port = await findAvailablePort(preferredPort);
-
-  if (port !== preferredPort) {
-    console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
+  const port = parseInt(process.env.PORT || "3000");
+  
+  // In production, always use the specified PORT (required for Cloud Run)
+  // In development, find an available port if the preferred one is busy
+  if (process.env.NODE_ENV === "production") {
+    server.listen(port, "0.0.0.0", () => {
+      console.log(`Server running on http://0.0.0.0:${port}/`);
+    });
+  } else {
+    const availablePort = await findAvailablePort(port);
+    if (availablePort !== port) {
+      console.log(`Port ${port} is busy, using port ${availablePort} instead`);
+    }
+    server.listen(availablePort, () => {
+      console.log(`Server running on http://localhost:${availablePort}/`);
+    });
   }
-
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
-  });
 }
 
 startServer().catch(console.error);
