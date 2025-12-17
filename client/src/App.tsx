@@ -22,6 +22,15 @@ import AdminOrders from "./pages/AdminOrders";
 import AdminProducts from "./pages/AdminProducts";
 import AdminUsers from "./pages/AdminUsers";
 import AdminContent from "./pages/AdminContent";
+import AdminDashboard from "./pages/admin/Dashboard";
+import AdminProductsPage from "./pages/admin/Products";
+import AdminGallery from "./pages/admin/Gallery";
+import AdminActivities from "./pages/admin/Activities";
+import AdminMessages from "./pages/admin/Messages";
+import AdminPartnerships from "./pages/admin/Partnerships";
+import AdminDonationsPage from "./pages/admin/Donations";
+import AdminCommitments from "./pages/admin/Commitments";
+import StoreNew from "./pages/StoreNew";
 
 function Router() {
   return (
@@ -34,14 +43,21 @@ function Router() {
       <Route path={"/gallery"} component={Gallery} />
       <Route path={"/activities"} component={Activities} />
       <Route path={"/store"} component={Store} />
-      <Route path={"/admin"} component={Admin} />
+      <Route path={"/store-new"} component={StoreNew} />
+      <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/chofetz-chaim"} component={ChofetzChaim} />
       <Route path={"/shop"} component={Shop} />
       <Route path={"/debug-shop"} component={DebugShop} />
       <Route path={"/shop/:id"} component={ProductDetail} />
       <Route path={"/admin/donations"} component={AdminDonations} />
       <Route path={"/admin/orders"} component={AdminOrders} />
-      <Route path={"/admin/products"} component={AdminProducts} />
+      <Route path={"/admin/products"} component={AdminProductsPage} />
+      <Route path={"/admin/gallery"} component={AdminGallery} />
+      <Route path={"/admin/activities"} component={AdminActivities} />
+      <Route path={"/admin/messages"} component={AdminMessages} />
+      <Route path={"/admin/partnerships"} component={AdminPartnerships} />
+      <Route path={"/admin/donations-new"} component={AdminDonationsPage} />
+      <Route path={"/admin/commitments"} component={AdminCommitments} />
       <Route path={"/admin/users"} component={AdminUsers} />
       <Route path={"/admin/content"} component={AdminContent} />
       <Route path={"/404"} component={NotFound} />

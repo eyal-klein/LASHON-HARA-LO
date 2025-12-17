@@ -21,15 +21,21 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, ShoppingBag, Image, Calendar, Mail, Handshake, DollarSign, FileText } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Page 1", path: "/" },
-  { icon: Users, label: "Page 2", path: "/some-path" },
+  { icon: LayoutDashboard, label: "לוח בקרה", path: "/admin" },
+  { icon: ShoppingBag, label: "מוצרים", path: "/admin/products" },
+  { icon: Image, label: "גלריה", path: "/admin/gallery" },
+  { icon: Calendar, label: "פעילויות", path: "/admin/activities" },
+  { icon: Mail, label: "הודעות", path: "/admin/messages" },
+  { icon: Handshake, label: "שותפויות", path: "/admin/partnerships" },
+  { icon: DollarSign, label: "תרומות", path: "/admin/donations" },
+  { icon: FileText, label: "התחייבויות", path: "/admin/commitments" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

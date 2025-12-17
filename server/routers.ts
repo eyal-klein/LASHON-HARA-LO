@@ -12,6 +12,7 @@ import { chofetzChaimRouter } from "./routers/chofetzChaim";
 import { donationsRouter } from "./routers/donations";
 import { productsRouter } from "./routers/products";
 import { ordersRouter } from "./routers/orders";
+import { chatbotRouter } from "./routers/chatbot";
 
 export const appRouter = router({
   // System router (notifications, etc.)
@@ -40,6 +41,7 @@ export const appRouter = router({
   donations: donationsRouter,
   products: productsRouter,
   orders: ordersRouter,
+  chatbot: chatbotRouter,
 });
 
 export type AppRouter = typeof appRouter;
