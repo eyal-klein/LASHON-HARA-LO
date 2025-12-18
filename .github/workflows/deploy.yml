@@ -41,13 +41,6 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-            --build-arg JWT_SECRET="${{ secrets.JWT_SECRET }}" \
-            --build-arg VITE_APP_ID="${{ secrets.VITE_APP_ID }}" \
-            --build-arg VITE_OAUTH_PORTAL_URL="${{ secrets.VITE_OAUTH_PORTAL_URL }}" \
-            --build-arg OAUTH_SERVER_URL="${{ secrets.OAUTH_SERVER_URL }}" \
-            --build-arg VITE_ANALYTICS_ENDPOINT="${{ secrets.VITE_ANALYTICS_ENDPOINT }}" \
-            --build-arg VITE_ANALYTICS_WEBSITE_ID="${{ secrets.VITE_ANALYTICS_WEBSITE_ID }}" \
             -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:${{ github.sha }} \
             -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:latest \
             .
@@ -70,7 +63,7 @@ jobs:
             --min-instances 0 \
             --max-instances 10 \
             --set-env-vars "NODE_ENV=production" \
-            --set-secrets "DATABASE_URL=DATABASE_URL:latest,JWT_SECRET=JWT_SECRET:latest,OAUTH_SERVER_URL=OAUTH_SERVER_URL:latest,VITE_APP_ID=VITE_APP_ID:latest,VITE_OAUTH_PORTAL_URL=VITE_OAUTH_PORTAL_URL:latest,VITE_ANALYTICS_ENDPOINT=VITE_ANALYTICS_ENDPOINT:latest,VITE_ANALYTICS_WEBSITE_ID=VITE_ANALYTICS_WEBSITE_ID:latest,BUILT_IN_FORGE_API_KEY=BUILT_IN_FORGE_API_KEY:latest,BUILT_IN_FORGE_API_URL=BUILT_IN_FORGE_API_URL:latest,VITE_FRONTEND_FORGE_API_KEY=VITE_FRONTEND_FORGE_API_KEY:latest,VITE_FRONTEND_FORGE_API_URL=VITE_FRONTEND_FORGE_API_URL:latest"
+            --set-secrets "DATABASE_URL=DATABASE_URL:latest,JWT_SECRET=JWT_SECRET:latest"
 
       - name: Show deployment URL
         run: |
