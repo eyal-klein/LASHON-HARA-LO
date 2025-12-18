@@ -10,8 +10,7 @@ export const subscribersRouter = router({
   subscribe: publicProcedure
     .input(z.object({
       email: z.string().email(),
-      firstName: z.string().optional(),
-      lastName: z.string().optional(),
+      name: z.string().optional(),
       source: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
@@ -30,9 +29,9 @@ export const subscribersRouter = router({
       
       if (existing.length > 0) {
         // Reactivate if unsubscribed
-        if (!existing[0].isActive) {
+        if (existing[0].status === "unsubscribed") {
           await db.update(subscribers)
-            .set({ isActive: true, updatedAt: new Date() })
+            .set({ status: "active", confirmedAt: new Date() })
             .where(eq(subscribers.email, input.email));
           return { success: true, message: "נרשמת מחדש בהצלחה!" };
         }
@@ -41,11 +40,11 @@ export const subscribersRouter = router({
       
       await db.insert(subscribers).values({
         email: input.email,
-        firstName: input.firstName || null,
-        lastName: input.lastName || null,
+        name: input.name || null,
         source: input.source || "website",
         unsubscribeToken,
-        isActive: true,
+        status: "active",
+        confirmedAt: new Date(),
       });
       
       return { success: true, message: "נרשמת בהצלחה לניוזלטר!" };
@@ -63,7 +62,7 @@ export const subscribersRouter = router({
       }
       
       await db.update(subscribers)
-        .set({ isActive: false, updatedAt: new Date() })
+        .set({ status: "unsubscribed", unsubscribedAt: new Date() })
         .where(eq(subscribers.unsubscribeToken, input.token));
       
       return { success: true, message: "הוסרת מרשימת התפוצה" };
