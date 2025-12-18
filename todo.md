@@ -588,3 +588,38 @@ The website is complete with:
 - ✅ TypeScript errors fixed
 - ✅ Images optimized to WebP
 - ✅ Ready for client delivery
+
+
+---
+
+## 🚨 CRITICAL - Product Content Migration (Dec 18, 2024)
+
+### Issue
+- Production shows English test products ("Low Stock Product", "Updated Test Product")
+- Need to replace with real Hebrew products from original site
+- Images are correct (WebP) but content is wrong
+
+### Tasks
+- [ ] Delete all test products from production DB
+- [ ] Import all 178 real Hebrew products with correct names/descriptions
+- [ ] Verify products display correctly in production
+- [ ] Test product filtering and search
+
+
+---
+
+## 🚨 CRITICAL - Complete Product & Category Migration (Dec 18, 2024)
+
+### Current Problem
+- Production DB has English test products
+- Categories may not match original site
+- Need complete 1:1 migration from lashonhara.co.il
+
+### Migration Tasks
+- [ ] Scrape all categories from original site
+- [ ] Scrape all 178 products with Hebrew names, descriptions, prices
+- [ ] Delete all existing products and categories from production DB
+- [ ] Import correct categories
+- [ ] Import all 178 products with correct data
+- [ ] Map products to correct images (already have 178 WebP images)
+- [ ] Verify in production - all Hebrew, all correct
