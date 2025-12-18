@@ -92,13 +92,13 @@ export default function ContactNew() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-l from-blue-600 to-indigo-600 text-white py-20">
+      <section className="bg-[#ED1C24] text-white py-20">
         <div className="container">
           <div className="max-w-3xl">
             <h1 className="text-5xl font-bold mb-6">
               צרו קשר
             </h1>
-            <p className="text-xl text-blue-100">
+            <p className="text-xl text-white/90">
               נשמח לשמוע ממך! פנה אלינו בכל שאלה, הצעה או בקשה
             </p>
           </div>

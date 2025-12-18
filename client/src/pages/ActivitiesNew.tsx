@@ -86,13 +86,13 @@ export default function ActivitiesNew() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-l from-green-600 to-teal-600 text-white py-20">
+      <section className="bg-[#ED1C24] text-white py-20">
         <div className="container">
           <div className="max-w-3xl">
             <h1 className="text-5xl font-bold mb-6">
               הפעילות שלנו
             </h1>
-            <p className="text-xl text-green-100">
+            <p className="text-xl text-white/90">
               אירועים, הרצאות, קמפיינים ופעילויות למען הפצת המודעות לנזקי לשון הרע
             </p>
           </div>
