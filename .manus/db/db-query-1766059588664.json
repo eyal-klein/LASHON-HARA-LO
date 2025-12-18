@@ -1,0 +1,35 @@
+{
+  "query": "SELECT id, name, images FROM products LIMIT 5",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user oYmdjVqCBXRawEC.root --database P2hUXNrhYECTrVVVJer7eC --execute SELECT id, name, images FROM products LIMIT 5",
+  "rows": [
+    {
+      "id": "1",
+      "name": "צמיד סיליקון \"לשון הרע לא מדבר אליי\"",
+      "images": "[\"https://lashonhara.co.il/wp-content/uploads/2022/12/WhatsApp-Image-2022-12-13-at-17.23.59-1.jpeg\"]"
+    },
+    {
+      "id": "2",
+      "name": "מראה כיס עם הסלוגן",
+      "images": "[\"https://lashonhara.co.il/wp-content/uploads/2022/12/WhatsApp-Image-2022-12-13-at-17.23.59.jpeg\"]"
+    },
+    {
+      "id": "3",
+      "name": "צמיד בציפוי זהב",
+      "images": "[\"/images/bracelet.jpg\"]"
+    },
+    {
+      "id": "4",
+      "name": "חולצת \"לשון הרע לא מדבר אליי\"",
+      "images": "[\"/images/tshirt.jpg\"]"
+    },
+    {
+      "id": "5",
+      "name": "מימיית מתכת גדולה - אדום",
+      "images": "[\"https://via.placeholder.com/400x400/ED1C24/FFFFFF?text=מימיה\"]"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\timages\n1\tצמיד סיליקון \"לשון הרע לא מדבר אליי\"\t[\"https://lashonhara.co.il/wp-content/uploads/2022/12/WhatsApp-Image-2022-12-13-at-17.23.59-1.jpeg\"]\n2\tמראה כיס עם הסלוגן\t[\"https://lashonhara.co.il/wp-content/uploads/2022/12/WhatsApp-Image-2022-12-13-at-17.23.59.jpeg\"]\n3\tצמיד בציפוי זהב\t[\"/images/bracelet.jpg\"]\n4\tחולצת \"לשון הרע לא מדבר אליי\"\t[\"/images/tshirt.jpg\"]\n5\tמימיית מתכת גדולה - אדום\t[\"https://via.placeholder.com/400x400/ED1C24/FFFFFF?text=מימיה\"]\n",
+  "stderr": "",
+  "execution_time_ms": 1595
+}

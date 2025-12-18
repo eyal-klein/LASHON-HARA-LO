@@ -299,7 +299,7 @@ function FeaturedProductsSection() {
                     <CardContent className="p-0">
                       <div className="relative overflow-hidden rounded-t-lg aspect-square">
                         <img
-                          src={product.images?.[0] || "/placeholder-product.png"}
+                          src={product.images?.[0] || "/placeholder-product.svg"}
                           alt={product.name}
                           loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -379,7 +379,7 @@ function ActivitiesSection() {
               <CardContent className="p-0">
                 <div className="relative overflow-hidden rounded-t-lg h-48">
                   <img
-                    src={activity.imageUrl || "/placeholder-activity.png"}
+                    src={activity.imageUrl || "/placeholder-activity.svg"}
                     alt={activity.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
