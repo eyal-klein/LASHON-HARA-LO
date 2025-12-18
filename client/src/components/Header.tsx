@@ -1,8 +1,11 @@
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,7 +33,7 @@ export function Header() {
     >
       <div className="container">
         <div className="flex items-center justify-between h-20">
-          {/* Navigation - RTL: on the right */}
+          {/* Desktop Navigation - RTL: on the right */}
           <nav className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
               <Link key={item.label} href={item.href}>
@@ -51,7 +54,39 @@ export function Header() {
               />
             </a>
           </Link>
+
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </Button>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border-t">
+            <nav className="flex flex-col py-4 gap-2">
+              {navItems.map((item) => (
+                <Link key={item.label} href={item.href}>
+                  <a
+                    className="block px-4 py-3 text-foreground/80 hover:text-primary hover:bg-accent rounded-md transition-colors text-lg font-medium"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                </Link>
+              ))}
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );

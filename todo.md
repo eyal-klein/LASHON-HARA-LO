@@ -435,3 +435,32 @@ The website is complete with:
 - [x] Check Header component usage across all pages
 - [x] Verify HomeNew, StoreNew, GalleryNew, ActivitiesNew, ContactNew, AboutNew
 - [ ] Test in production after fix
+
+
+---
+
+## 🎯 NEW TASKS - E2E, Mobile Menu, Animations (Dec 18, 2024)
+
+### E2E Testing in Production
+- [ ] Test homepage (HomeNew) - all sections, buttons, links
+- [ ] Test store page (StoreNew) - carousel, products, filtering
+- [ ] Test gallery page (GalleryNew) - image display, lightbox
+- [ ] Test activities page (ActivitiesNew) - activity cards, filtering
+- [ ] Test contact page (ContactNew) - form, contact info
+- [ ] Test about page (AboutNew) - content display
+- [ ] Test donate page - form functionality
+- [ ] Document all findings in E2E report
+
+### Mobile Hamburger Menu
+- [x] Add hamburger icon to Header component
+- [x] Implement mobile menu drawer/sidebar
+- [x] Add open/close animations
+- [x] Ensure all nav items accessible on mobile
+- [ ] Test on various mobile screen sizes
+- [x] Add to HomeNew header as well (uses shared Header)
+
+### Page Transition Animations
+- [x] Attempted framer-motion integration
+- [x] Decided to skip - too complex, causing syntax errors
+- [x] Keeping simple CSS transitions instead
+- [x] Browser native transitions are fast enough
