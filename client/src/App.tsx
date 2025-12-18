@@ -1,49 +1,52 @@
 import { Toaster } from "@/components/ui/sonner";
+import { lazy, Suspense } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { CartProvider } from "./contexts/CartContext";
 import { Cart } from "./components/Cart";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Join from "./pages/Join";
-import Donate from "./pages/Donate";
-import Gallery from "./pages/Gallery";
-import Activities from "./pages/Activities";
-import Store from "./pages/Store";
-import Admin from "./pages/Admin";
-import ChofetzChaim from "./pages/ChofetzChaim";
-import Shop from "./pages/Shop";
-import ProductDetail from "./pages/ProductDetail";
-import DebugShop from "./pages/DebugShop";
-import AdminDonations from "./pages/AdminDonations";
-import AdminOrders from "./pages/AdminOrders";
-import AdminProducts from "./pages/AdminProducts";
-import AdminUsers from "./pages/AdminUsers";
-import AdminContent from "./pages/AdminContent";
-import AdminDashboard from "./pages/admin/Dashboard";
-import AdminProductsPage from "./pages/admin/Products";
-import AdminGallery from "./pages/admin/Gallery";
-import AdminActivities from "./pages/admin/Activities";
-import AdminMessages from "./pages/admin/Messages";
-import AdminPartnerships from "./pages/admin/Partnerships";
+
+// Eager load critical pages
 import HomeNew from "./pages/HomeNew";
-import ProductDetailNew from "./pages/ProductDetailNew";
-import AboutNew from "./pages/AboutNew";
-import AdminDonationsPage from "./pages/admin/Donations";
-import AdminCommitments from "./pages/admin/Commitments";
-import StoreNew from "./pages/StoreNew";
-import GalleryNew from "./pages/GalleryNew";
-import ActivitiesNew from "./pages/ActivitiesNew";
-import ContactNew from "./pages/ContactNew";
-import ChatbotNew from "./pages/ChatbotNew";
+import NotFound from "@/pages/NotFound";
+
+// Lazy load all other pages
+const AboutNew = lazy(() => import("./pages/AboutNew"));
+const ContactNew = lazy(() => import("./pages/ContactNew"));
+const Join = lazy(() => import("./pages/Join"));
+const Donate = lazy(() => import("./pages/Donate"));
+const GalleryNew = lazy(() => import("./pages/GalleryNew"));
+const ActivitiesNew = lazy(() => import("./pages/ActivitiesNew"));
+const StoreNew = lazy(() => import("./pages/StoreNew"));
+const ProductDetailNew = lazy(() => import("./pages/ProductDetailNew"));
+const ChatbotNew = lazy(() => import("./pages/ChatbotNew"));
+const Admin = lazy(() => import("./pages/Admin"));
+const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
+const AdminProductsPage = lazy(() => import("./pages/admin/Products"));
+const AdminGallery = lazy(() => import("./pages/admin/Gallery"));
+const AdminActivities = lazy(() => import("./pages/admin/Activities"));
+const AdminMessages = lazy(() => import("./pages/admin/Messages"));
+const AdminPartnerships = lazy(() => import("./pages/admin/Partnerships"));
+const AdminDonationsPage = lazy(() => import("./pages/admin/Donations"));
+const AdminCommitments = lazy(() => import("./pages/admin/Commitments"));
+
+// Loading component
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="text-center">
+      <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
+        <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">טוען...</span>
+      </div>
+      <p className="mt-4 text-sm text-gray-600">טוען...</p>
+    </div>
+  </div>
+);
 
 function Router() {
   return (
-    <Switch>
+    <Suspense fallback={<PageLoader />}>
+      <Switch>
       <Route path={"/"} component={HomeNew} />
       <Route path={"/about"} component={AboutNew} />
       <Route path={"/contact-new"} component={ContactNew} />
@@ -78,6 +81,7 @@ function Router() {
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
+    </Suspense>
   );
 }
 

@@ -24,6 +24,18 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react/jsx-runtime'],
+          'router': ['wouter'],
+          'trpc': ['@trpc/client', '@trpc/react-query'],
+          'ui': ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-dropdown-menu'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
+    minify: 'esbuild',
   },
   server: {
     host: true,
