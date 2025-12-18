@@ -1,56 +1,150 @@
-import { Header } from "@/components/Header";
 import { useState } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ShoppingBag, Search, Filter } from "lucide-react";
+import { ShoppingBag, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { NavigationWithCart } from "@/components/NavigationWithCart";
 import { toast } from "sonner";
-
-
 
 export default function StoreNew() {
   const { addItem } = useCart();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
+  const [carouselIndex, setCarouselIndex] = useState(0);
 
-  const { data: productsData, isLoading } = trpc.products.list.useQuery({
-    page,
-    limit: 12,
-    search: search || undefined,
-    category: selectedCategory === "all" ? undefined : (selectedCategory as any),
-  });
+  // Fetch featured products for carousel
+  const { data: featuredProducts } = trpc.products.list.useQuery(
+    {
+      page: 1,
+      limit: 6,
+      featured: true,
+    },
+    {
+      staleTime: 5 * 60 * 1000,
+    }
+  );
+
+  // Fetch all products for grid
+  const { data: productsData, isLoading } = trpc.products.list.useQuery(
+    {
+      page,
+      limit: 12,
+      search: search || undefined,
+      category: selectedCategory === "all" ? undefined : (selectedCategory as any),
+    },
+    {
+      staleTime: 2 * 60 * 1000,
+    }
+  );
 
   const { data: categories } = trpc.products.listCategories.useQuery();
 
+  const handleAddToCart = (product: any) => {
+    const images = typeof product.images === "string" ? JSON.parse(product.images) : product.images;
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: Number(product.price),
+      quantity: 1,
+      image: images?.[0] || "/placeholder-product.png",
+    });
+    toast.success("המוצר נוסף לעגלה");
+  };
+
+  const nextSlide = () => {
+    if (featuredProducts && carouselIndex < featuredProducts.items.length - 3) {
+      setCarouselIndex(carouselIndex + 1);
+    }
+  };
+
+  const prevSlide = () => {
+    if (carouselIndex > 0) {
+      setCarouselIndex(carouselIndex - 1);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <NavigationWithCart />
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-l from-blue-600 to-purple-600 text-white py-16">
-        <div className="container">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              החנות שלנו
-            </h1>
-            <p className="text-xl text-blue-100">
-              מוצרים ייחודיים להפצת המסר - צמידים, חולצות, מדבקות ועוד
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* Free Shipping Banner */}
+      <div className="bg-[#ED1C24] text-white py-3 text-center">
+        <p className="text-lg font-medium">משלוח חינם בקניה מעל 100 ש"ח לנקודות האיסוף</p>
+      </div>
 
-      {/* Filters */}
-      <section className="py-8 bg-white border-b">
+      {/* Featured Products Carousel */}
+      {featuredProducts && featuredProducts.items.length > 0 && (
+        <section className="py-8 bg-gray-50">
+          <div className="container">
+            <div className="relative">
+              {/* Navigation Buttons */}
+              <button
+                onClick={prevSlide}
+                disabled={carouselIndex === 0}
+                className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+
+              <button
+                onClick={nextSlide}
+                disabled={carouselIndex >= featuredProducts.items.length - 3}
+                className="absolute left-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+
+              {/* Carousel */}
+              <div className="overflow-hidden">
+                <div
+                  className="flex transition-transform duration-500 ease-out gap-4"
+                  style={{
+                    transform: `translateX(${carouselIndex * (100 / 3)}%)`,
+                  }}
+                >
+                  {featuredProducts.items.map((product) => {
+                    const images = typeof product.images === "string" ? JSON.parse(product.images) : product.images;
+                    return (
+                      <div key={product.id} className="flex-shrink-0 w-1/3 px-2">
+                        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                          <img
+                            src={images?.[0] || "/placeholder-product.png"}
+                            alt={product.name}
+                            loading="lazy"
+                            className="w-full aspect-square object-cover"
+                          />
+                          <div className="p-4 text-center">
+                            <h3 className="font-medium text-lg mb-2">{product.name}</h3>
+                            <Button
+                              onClick={() => handleAddToCart(product)}
+                              className="bg-[#ED1C24] hover:bg-red-700 text-white w-full"
+                            >
+                              לקניה &gt;&gt;&gt;
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Section Title */}
+      <section className="py-8">
         <div className="container">
-          <div className="flex flex-col md:flex-row gap-4">
+          <h2 className="text-3xl font-bold text-center mb-8">מוצרים פופולריים</h2>
+
+          {/* Filters */}
+          <div className="flex flex-col md:flex-row gap-4 mb-8">
             <div className="relative flex-1">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -74,15 +168,11 @@ export default function StoreNew() {
               </SelectContent>
             </Select>
           </div>
-        </div>
-      </section>
 
-      {/* Products Grid */}
-      <section className="py-12">
-        <div className="container">
+          {/* Products Grid */}
           {isLoading ? (
             <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#ED1C24]"></div>
               <p className="mt-4 text-muted-foreground">טוען מוצרים...</p>
             </div>
           ) : productsData?.items.length === 0 ? (
@@ -95,96 +185,53 @@ export default function StoreNew() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {productsData?.items.map((product) => {
-                  const images = typeof product.images === 'string' 
-                    ? JSON.parse(product.images) 
-                    : product.images;
-                  const firstImage = Array.isArray(images) ? images[0] : null;
-                  const stockQuantity = Number(product.stockQuantity) || 0;
-
+                  const images = typeof product.images === "string" ? JSON.parse(product.images) : product.images;
                   return (
-                    <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                      <div className="relative aspect-square bg-gray-100">
-                        {firstImage ? (
+                    <Card key={product.id} className="group hover:shadow-lg transition-shadow">
+                      <CardContent className="p-0">
+                        <div className="relative overflow-hidden">
                           <img
-                            src={firstImage}
+                            src={images?.[0] || "/placeholder-product.png"}
                             alt={product.name}
-                            className="w-full h-full object-cover"
+                            loading="lazy"
+                            className="w-full aspect-square object-cover"
                           />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                            <ShoppingBag className="h-16 w-16" />
+                        </div>
+                        <div className="p-4">
+                          <h3 className="font-medium text-lg mb-2 line-clamp-2">{product.name}</h3>
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="text-xl font-bold">₪{product.price}</span>
                           </div>
-                        )}
-                        {stockQuantity === 0 && (
-                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                            <Badge variant="destructive" className="text-lg">אזל מהמלאי</Badge>
-                          </div>
-                        )}
-                      </div>
-                      <CardHeader>
-                        <CardTitle className="text-lg">{product.name}</CardTitle>
-                        {product.description && (
-                          <p className="text-sm text-muted-foreground line-clamp-2">
-                            {product.description}
-                          </p>
-                        )}
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex items-center justify-between">
-                          <span className="text-2xl font-bold text-primary">
-                            ₪{Number(product.price).toFixed(2)}
-                          </span>
-                          {stockQuantity > 0 && stockQuantity <= 5 && (
-                            <Badge variant="secondary">נותרו {stockQuantity}</Badge>
-                          )}
+                          <Button
+                            onClick={() => handleAddToCart(product)}
+                            className="w-full bg-[#ED1C24] hover:bg-red-700 text-white"
+                          >
+                            לקניה &gt;&gt;&gt;
+                          </Button>
                         </div>
                       </CardContent>
-                      <CardFooter className="flex gap-2">
-                        <Link href={`/product/${product.id}`} className="flex-1">
-                          <Button variant="outline" className="w-full">
-                            פרטים
-                          </Button>
-                        </Link>
-                        <Button 
-                          className="flex-1" 
-                          disabled={stockQuantity === 0}
-                          onClick={() => {
-                            addItem({
-                              id: product.id,
-                              name: product.name,
-                              price: Number(product.price),
-                              image: firstImage || "/placeholder-product.png",
-                              slug: product.slug,
-                            });
-                            toast.success(`${product.name} נוסף לעגלה!`);
-                          }}
-                        >
-                          <ShoppingBag className="h-4 w-4 ml-2" />
-                          {stockQuantity === 0 ? "אזל מהמלאי" : "הוסף לסל"}
-                        </Button>
-                      </CardFooter>
                     </Card>
                   );
                 })}
               </div>
 
               {/* Pagination */}
-              {productsData && productsData.total > 12 && (
-                <div className="flex items-center justify-center gap-4 mt-12">
+              {productsData && productsData.totalPages > 1 && (
+                <div className="flex justify-center gap-2 mt-8">
                   <Button
                     variant="outline"
-                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    onClick={() => setPage(page - 1)}
                     disabled={page === 1}
                   >
                     הקודם
                   </Button>
-                  <span className="text-sm text-muted-foreground">
-                    עמוד {page} מתוך {Math.ceil(productsData.total / 12)}
+                  <span className="flex items-center px-4">
+                    עמוד {page} מתוך {productsData.totalPages}
                   </span>
                   <Button
                     variant="outline"
-                    onClick={() => setPage(p => p + 1)}
-                    disabled={page * 12 >= productsData.total}
+                    onClick={() => setPage(page + 1)}
+                    disabled={page === productsData.totalPages}
                   >
                     הבא
                   </Button>
@@ -195,36 +242,15 @@ export default function StoreNew() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-xl font-bold mb-4">לשון הרע לא מדבר אליי</h3>
-              <p className="text-gray-400">
-                עמותה ללא מטרות רווח למען הפצת המודעות לנזקי לשון הרע
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">קישורים מהירים</h4>
-              <div className="space-y-2">
-                <Link href="/about" className="block text-gray-400 hover:text-white transition-colors">אודות</Link>
-                <Link href="/activities" className="block text-gray-400 hover:text-white transition-colors">הפעילות שלנו</Link>
-                <Link href="/contact" className="block text-gray-400 hover:text-white transition-colors">צרו קשר</Link>
-              </div>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">צור קשר</h4>
-              <p className="text-gray-400">
-                info@lashonhara.co.il
-              </p>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; {new Date().getFullYear()} לשון הרע לא מדבר אליי. כל הזכויות שמורות.</p>
-          </div>
+      {/* Free Shipping Info Section */}
+      <section className="py-12 bg-gray-50">
+        <div className="container text-center">
+          <h3 className="text-2xl font-bold mb-4">דואגים לכם למשלוח חינם!</h3>
+          <p className="text-lg text-muted-foreground">
+            ברכישה מעל 100 ש"ח - משלוח חינם לנקודות האיסוף ברחבי הארץ
+          </p>
         </div>
-      </footer>
+      </section>
     </div>
   );
 }

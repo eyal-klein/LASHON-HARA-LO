@@ -80,7 +80,7 @@ function HeaderOld() {
               </Link>
             ))}
             <Link href="/donate">
-              <Button className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white">
+              <Button className="bg-[#ED1C24] hover:bg-red-700 text-white">
                 תרומה
                 <Heart className="mr-2 h-4 w-4" />
               </Button>
@@ -97,7 +97,7 @@ function HeroSection() {
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Animated Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-pink-500 to-rose-500 opacity-90">
+      <div className="absolute inset-0 bg-gradient-to-br from-red-600 via-red-500 to-rose-600 opacity-95">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE4YzAtOS45NC04LjA2LTE4LTE4LTE4UzAgOC4wNiAwIDE4czguMDYgMTggMTggMTggMTgtOC4wNiAxOC0xOHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30" />
       </div>
 
@@ -110,15 +110,6 @@ function HeroSection() {
       {/* Content */}
       <div className="container relative z-10 text-center text-white">
         <div className="max-w-5xl mx-auto">
-          {/* Logo */}
-          <div className="mb-8 animate-fade-in">
-            <img
-              src="/images/lh-logo.png"
-              alt="לשון הרע לא מדבר אליי"
-              className="h-32 md:h-40 lg:h-48 w-auto mx-auto drop-shadow-2xl"
-            />
-          </div>
-
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 animate-fade-in">
             לשון הרע{" "}
             <span className="text-yellow-300 drop-shadow-lg">לא מדבר</span>{" "}
@@ -134,7 +125,7 @@ function HeroSection() {
             <Link href="/join">
               <Button
                 size="lg"
-                className="bg-white text-purple-600 hover:bg-white/90 text-xl px-8 py-6 h-auto"
+                className="bg-white text-[#ED1C24] hover:bg-white/90 text-xl px-8 py-6 h-auto font-bold"
               >
                 אני מצטרף להתחייבות
                 <ArrowLeft className="mr-2 h-6 w-6" />
@@ -179,7 +170,7 @@ function StatsSection() {
       icon: Heart,
       value: donationsStats?.totalDonations || 500,
       label: "שגרירים",
-      color: "from-pink-500 to-rose-500",
+      color: "from-red-500 to-red-600",
     },
     {
       icon: School,
@@ -191,7 +182,7 @@ function StatsSection() {
       icon: ShoppingBag,
       value: 10000,
       label: "מוצרים נמכרו",
-      color: "from-purple-500 to-indigo-500",
+      color: "from-gray-700 to-gray-800",
     },
   ];
 
@@ -227,11 +218,17 @@ function StatsSection() {
 
 // Featured Products Carousel
 function FeaturedProductsSection() {
-  const { data: products } = trpc.products.list.useQuery({
-    page: 1,
-    limit: 8,
-    featured: true,
-  });
+  const { data: products } = trpc.products.list.useQuery(
+    {
+      page: 1,
+      limit: 8,
+      featured: true,
+    },
+    {
+      staleTime: 5 * 60 * 1000, // 5 minutes cache
+      cacheTime: 10 * 60 * 1000, // 10 minutes
+    }
+  );
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const itemsPerPage = 4;
@@ -302,6 +299,7 @@ function FeaturedProductsSection() {
                         <img
                           src={product.images?.[0] || "/placeholder-product.png"}
                           alt={product.name}
+                          loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         {product.featured && (
@@ -339,11 +337,16 @@ function FeaturedProductsSection() {
 
 // Activities Preview
 function ActivitiesSection() {
-  const { data: activities } = trpc.activities.list.useQuery({
-    page: 1,
-    limit: 3,
-    upcoming: true,
-  });
+  const { data: activities } = trpc.activities.list.useQuery(
+    {
+      page: 1,
+      limit: 3,
+      upcoming: true,
+    },
+    {
+      staleTime: 2 * 60 * 1000, // 2 minutes cache
+    }
+  );
 
   if (!activities || activities.items.length === 0) return null;
 
@@ -430,7 +433,7 @@ function ImpactSection() {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-purple-600 via-pink-500 to-rose-500 text-white">
+    <section className="py-20 bg-gradient-to-br from-red-600 via-red-500 to-rose-600 text-white">
       <div className="container">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
@@ -498,14 +501,14 @@ function CTASection() {
 
             <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer">
               <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                   <Heart className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="font-bold text-xl mb-2">תרמו</h3>
                 <p className="text-muted-foreground mb-4">
                   תמכו בפעילות שלנו
                 </p>
-                <Link href="/join">               <Button className="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600">
+                <Link href="/donate">               <Button className="w-full bg-[#ED1C24] hover:bg-red-700">
                     תרמו עכשיו
                   </Button>
                 </Link>
@@ -543,6 +546,7 @@ function Footer() {
             <img
               src="/images/lh-logo.png"
               alt="לשון הרע לא מדבר אליי"
+              loading="lazy"
               className="h-16 w-auto mb-4"
             />
             <p className="text-gray-400">

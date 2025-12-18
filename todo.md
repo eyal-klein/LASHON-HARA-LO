@@ -393,3 +393,33 @@ The website is complete with:
   - Consistent across all pages (HomeNew, StoreNew, GalleryNew, etc.)
   - Proper spacing and alignment
   - Scroll-based background transition
+
+
+---
+
+## 🚨 CLIENT FEEDBACK - CRITICAL FIXES NEEDED (Dec 18, 2024)
+
+### Brand Coherence Issues
+- [x] Remove ALL purple/pink gradient colors from homepage hero section (NOT in brand book!)
+- [x] Fix duplicate logo on homepage (appears twice - should only be in header)
+- [x] Verify all colors match brand book: Red #ED1C24, Black, White, Light Gray only
+
+### Performance Issues
+- [x] Optimize page loading speed (pages loading slowly)
+- [x] Implement lazy loading for images
+- [x] Optimize component rendering
+- [x] Review and optimize database queries
+
+### Navigation & Routing
+- [x] Connect "תמיכה כספית" button to /donate page
+- [x] Verify all internal links work correctly
+
+### Store Redesign (PRIORITY - Copy 1:1 from original site)
+- [x] Replicate exact store layout from lashonhara.co.il/shop-m/
+- [x] Match product grid design exactly
+- [x] Match product card design (image, name, price, "לקניה >>>" button)
+- [x] Implement featured products carousel at top
+- [x] Use white background (no colors except red accents)
+- [x] Match category display and filtering
+- [x] Verify all 178 products display correctly with images
+- [x] Match typography and spacing from original
