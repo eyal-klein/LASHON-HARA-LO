@@ -61,16 +61,7 @@ function HeaderOld() {
     >
       <div className="container">
         <div className="flex items-center justify-between h-20">
-          <Link href="/">
-            <a className="flex items-center gap-3">
-              <img
-                src="/images/lh-logo.png"
-                alt="לשון הרע לא מדבר אליי"
-                className="h-14 w-auto"
-              />
-            </a>
-          </Link>
-
+          {/* Navigation - RTL: on the right */}
           <nav className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
               <Link key={item.label} href={item.href}>
@@ -86,6 +77,17 @@ function HeaderOld() {
               </Button>
             </Link>
           </nav>
+
+          {/* Logo - RTL: on the left */}
+          <Link href="/">
+            <a className="flex items-center gap-3">
+              <img
+                src="/images/lh-logo.png"
+                alt="לשון הרע לא מדבר אליי"
+                className="h-14 w-auto"
+              />
+            </a>
+          </Link>
         </div>
       </div>
     </header>
