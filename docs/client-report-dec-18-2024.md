@@ -200,7 +200,7 @@ const { data } = trpc.products.list.useQuery(
 
 2. **Deploy Stage:**
    - בניית גרסת ייצור
-   - פריסה אוטומטית ל-Manus Platform
+   - פריסה אוטומטית ל-Cloud Run
    - רק בעת push ל-main branch
 
 **קובץ תצורה:**
@@ -353,6 +353,5 @@ jobs:
 
 ---
 
-**הוכן על ידי:** Manus AI  
 **תאריך:** 18 בדצמבר 2024  
 **גרסה:** 5803795c

@@ -464,3 +464,19 @@ The website is complete with:
 - [x] Decided to skip - too complex, causing syntax errors
 - [x] Keeping simple CSS transitions instead
 - [x] Browser native transitions are fast enough
+
+
+---
+
+## 🚨 URGENT - Remove Manus References (Dec 18, 2024)
+
+### Client-Facing Documents
+- [x] Remove "Manus" from client-report-dec-18-2024.md
+- [x] Remove "Manus" from e2e-test-report-dec-18-2024.md
+- [x] Keep technical docs (RAG, DEBUG) as-is (internal only)
+
+### Website UI
+- [x] Verify no "Manus" text in any page components
+- [x] Check all user-facing strings
+- [x] Rename ManusDialog to LoginDialog
+- [x] Change login text to Hebrew
