@@ -30,6 +30,13 @@ const AdminMessages = lazy(() => import("./pages/admin/Messages"));
 const AdminPartnerships = lazy(() => import("./pages/admin/Partnerships"));
 const AdminDonationsPage = lazy(() => import("./pages/admin/Donations"));
 const AdminCommitments = lazy(() => import("./pages/admin/Commitments"));
+const ChofetzChaim = lazy(() => import("./pages/ChofetzChaim"));
+const DebugShop = lazy(() => import("./pages/DebugShop"));
+const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const AdminDonations = lazy(() => import("./pages/AdminDonations"));
+const AdminOrders = lazy(() => import("./pages/AdminOrders"));
+const AdminUsers = lazy(() => import("./pages/AdminUsers"));
+const AdminContent = lazy(() => import("./pages/AdminContent"));
 
 // Loading component
 const PageLoader = () => (
